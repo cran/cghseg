@@ -107,13 +107,10 @@ setGeneric( name = "getmultiKmax"          ,def = function(.Object,CGHo,uniKmax=
 setGeneric( name = "multisegout"           ,def = function(.Object,seg.rep,Res,Kselect){standardGeneric("multisegout")})
 setGeneric( name = "multisegmean"          ,def = function(.Object,CGHo,uniKmax,multiKmax){standardGeneric("multisegmean")})
 setGeneric( name = "multisegmixt"          ,def = function(.Object,CGHo,uniKmax,multiKmax,phi){standardGeneric("multisegmixt")})
-setGeneric( name = "ILS.loglik"            ,def = function(.Object,mu,bias){standardGeneric("ILS.loglik")})
 setGeneric( name = "ILS"                   ,def = function(.Object,CGHo,uniKmax,multiKmax){standardGeneric("ILS")})
-setGeneric( name = "lvmixt.ILSclust"       ,def = function(.Object,mu,phi,bias){standardGeneric("lvmixt.ILSclust")})
 setGeneric( name = "ILSclust.output"       ,def = function(.Object,mu,phi,tau){standardGeneric("ILSclust.output")})
 setGeneric( name = "ILSclust"              ,def = function(.Object,CGHo,uniKmax,multiKmax){standardGeneric("ILSclust")})
 setGeneric( name = "multisegclust.output"  ,def = function(.Object,mu,phi,tau){standardGeneric("multisegclust.output")})
-setGeneric( name = "lvmixt.MSC"            ,def = function(.Object,mu,phi){standardGeneric("lvmixt.MSC")})
 setGeneric( name = "multisegclust"         ,def = function(.Object,CGHo,uniKmax,multiKmax){standardGeneric("multisegclust")})
 setGeneric( name = "multiseg"              ,def = function(.Object,CGHo,uniKmax=NULL,multiKmax=NULL){standardGeneric("multiseg")})
 setGeneric( name = "golden.search"         ,def = function(.Object,CGHo,uniKmax,multiKmax){standardGeneric("golden.search")})
@@ -121,7 +118,7 @@ setGeneric( name = "uniseg"                ,def = function(.Object,CGHo,uniKmax=
 setGeneric( name = "correctdata"           ,def = function(.Object,bias){standardGeneric("correctdata")})
 setGeneric( name = "revertdata"            ,def = function(.Object,bias){standardGeneric("revertdata")})
 setGeneric( name = "getbias"               ,def = function(.Object,CGHo,mu,bias,phi=c(),tau=c()){standardGeneric("getbias")})
-setGeneric( name = "DP2EM"                 ,def = function(.Object,mu){standardGeneric("DP2EM")})
+setGeneric( name = "DP2EM"                 ,def = function(.Object,mu,theta=NULL){standardGeneric("DP2EM")})
 
 
 

@@ -3,13 +3,44 @@ setMethod(f = "getuniKmax",signature = "CGHdata",
             
             if (is.null(uniKmax)){              
               if (CGHo["select"] == "none"){
-                cat("[getuniKmax] if no selection is performed while uniKmax is not specified \n")
-                cat("[getuniKmax] uniKmax is initialized by default\n")
+                cat("[getuniKmax] if no selection is performed while uniKmax is not specified \n")                
               }
-              uniKmax = lapply(names(.Object@Y),FUN = function(ell){
-                floor(sum(!is.na(.Object@Y[[ell]]))*CGHo["alpha"])
-              })
-              names(uniKmax) = names(.Object@Y)                                           
+              cat("[getuniKmax] uniKmax initialized by pre-screening\n")
+              ## uniKmax = lapply(names(.Object@Y),FUN = function(ell){floor(sum(!is.na(.Object@Y[[ell]]))*CGHo["alpha"])})
+              select.tmp    = CGHo["select"]
+              calling.tmp   = CGHo["calling"]
+              calling(CGHo) = FALSE
+			  select(CGHo)  = "mBIC"
+			  if (CGHo@nbprocs>1){
+				if (Sys.info()["sysname"] == "Windows"){
+				 	CGHo@cluster <- makeCluster(getOption("cl.cores", CGHo@nbprocs)) 
+				  	uniKmax = parLapply(CGHo@cluster, .Object@Y, fun = function(y){
+								  Kmax = floor(sum(!is.na(y)))*CGHo["alpha"]
+								  Kmax = min(200,Kmax)
+								  dim(unisegmean(y,CGHo,Kmax)$mu)[1]
+						  		}) # fun argument instead of FUN
+				  	stopCluster(CGHo@cluster)
+				}
+				else{
+				  uniKmax = mclapply(.Object@Y, FUN = function(y){
+							  Kmax = floor(sum(!is.na(y)))*CGHo["alpha"]
+							  Kmax = min(200,Kmax)
+							  dim(unisegmean(y,CGHo,Kmax)$mu)[1]
+#						  	}) # fun argument instead of FUN
+							}, mc.cores = CGHo@nbprocs)
+				}
+			  }
+			  else{
+				  uniKmax = lapply(.Object@Y,FUN = function(y){
+							  Kmax = floor(sum(!is.na(y)))*CGHo["alpha"]
+							  Kmax = min(200,Kmax)
+							  dim(unisegmean(y,CGHo,Kmax)$mu)[1]
+						  })
+			  }
+			  Kmax    = max(unlist(uniKmax))
+              uniKmax = lapply(uniKmax,FUN=function(x){x=2*Kmax})
+              names(uniKmax) = names(.Object@Y)
+              select(CGHo)   = select.tmp
             } else {              
               if ( sum(names(.Object@Y) != names(uniKmax))>0){                
                 cat("[getuniKmax] uniKmax should be a list with the same names as CGHd \n")
@@ -26,35 +57,11 @@ setMethod(f = "getuniKmax",signature = "CGHdata",
                     stop()
                   }
                 }
-                n.com  = length(.Object@Y[[1]])
-#                if (uniKmax[[m]]> floor(n.com/CGHo["lmin"])){
-#                  cat("[getuniKmax] Error in uniKmax \n")
-#                  cat("[getuniKmax] Error for profile: ", m, "\n")
-#                  cat("[getuniKmax] The max number of segments for this profile must be lower than [length(x)/lmin]","\n")
-#                  cat("[getuniKmax] Check CGHo[\"lmin\"] and uniKmax for this profile","\n")                
-#                  stop()
-#                }                
-#                if (uniKmax[[m]]*CGHo["lmax"]<1){
-#                  cat("[getuniKmax] Error in uniKmax \n")
-#                  cat("[getuniKmax] Error for profile: ", m, "\n")
-#                  cat("[getuniKmax] The max number of segments for this profile must be greater than [length(x)/lmax]","\n")
-#                  cat("[getuniKmax] Check CGHo[\"lmax\"] and uniKmax for this patient","\n")
-#                  stop()          
-#                }
+                n.com  = length(.Object@Y[[1]])                
               })
             }
             return(uniKmax)  
           })
-
-
-
-
-
-
-
-
-
-
 
 
 

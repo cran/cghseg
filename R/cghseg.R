@@ -4,6 +4,71 @@
 ##########
 #########################################################################################################
 
+
+ClassiSeg <- function(geno, grille, Kmax){
+	nRow <- length(geno)
+	nGrille <- length(grille)
+      	### Appel C
+	A <- .C("ClassiSeg",as.double(geno), as.integer(nRow), as.integer(Kmax),  res1=double(Kmax*nRow), res2=integer(Kmax*nRow), as.integer(nGrille), moyennes=as.double(grille), PACKAGE="cghseg")
+	A$res1 <- matrix(A$res1, nrow=Kmax, byrow=TRUE)
+	A$res2 <- matrix(A$res2, nrow=Kmax, byrow=TRUE)
+	n <- ncol(A$res1)
+	res3 <- matrix(NA, nrow=nrow(A$res2), ncol=nrow(A$res2))
+	res3[1, 1] <- 0
+	for(i in 2: nrow(A$res2)){
+		res3[i, i-1] <- A$res2[i, n]
+		for(k in 1:(i-1)){
+		res3[i, i-1-k] <- A$res2[i-k, res3[i, i-k]]
+		}		
+	}
+	diag(res3) <- ncol(A$res1)
+	return(list(J.est=A$res1[,Kmax],t.est=res3))
+	} 
+### logP = donner -logProba du melange
+### variance = variance du modèle
+ClassiSeg_2 <- function(geno, grille, Kmax, logP, variance){
+	nRow <- length(geno)
+	nGrille <- length(grille)
+### Appel C
+	A <- .C("ClassiSegProba",as.double(geno), as.integer(nRow), as.integer(Kmax),  res1=double(Kmax*nRow), 
+			res2=integer(Kmax*nRow), as.integer(nGrille), moyennes=as.double(grille), 
+			logP=as.double(logP), variance=as.double(variance), PACKAGE="cghseg")
+	A$res1 <- matrix(A$res1, nrow=Kmax, byrow=TRUE)
+	A$res2 <- matrix(A$res2, nrow=Kmax, byrow=TRUE)
+	n <- ncol(A$res1)
+	res3 <- matrix(NA, nrow=nrow(A$res2), ncol=nrow(A$res2))
+	res3[1, 1] <- 0
+	for(i in 2: nrow(A$res2)){
+		res3[i, i-1] <- A$res2[i, n]
+		for(k in 1:(i-1)){
+			res3[i, i-1-k] <- A$res2[i-k, res3[i, i-k]]
+		}		
+	}
+	diag(res3) <- ncol(A$res1)
+	return(list(J.est=A$res1[,Kmax],t.est=res3))
+} 
+
+ClassiSeg_ <- function(geno, grille, Kmax){
+	nRow <- length(geno)
+	nGrille <- length(grille)
+      	### Appel C
+	A <- .C("ClassiSeg",as.double(geno), as.integer(nRow), as.integer(Kmax),  res1=double(Kmax*nRow), res2=integer(Kmax*nRow), as.integer(nGrille), moyennes=as.double(grille), PACKAGE="cghseg")
+	A$res1 <- matrix(A$res1, nrow=Kmax, byrow=TRUE)
+	A$res2 <- matrix(A$res2, nrow=Kmax, byrow=TRUE)
+	return(A)
+	} 
+
+ClassiSeg_2_ <- function(geno, grille, Kmax, logP, variance){
+	nRow <- length(geno)
+	nGrille <- length(grille)
+### Appel C
+	A <- .C("ClassiSegProba",as.double(geno), as.integer(nRow), as.integer(Kmax),  res1=double(Kmax*nRow), 
+			res2=integer(Kmax*nRow), as.integer(nGrille), moyennes=as.double(grille), 
+			logP=as.double(logP), variance=as.double(variance), PACKAGE="cghseg")
+	A$res1 <- matrix(A$res1, nrow=Kmax, byrow=TRUE)
+	A$res2 <- matrix(A$res2, nrow=Kmax, byrow=TRUE)
+	return(A)
+} 
 colibriR_c <- function(signalBruite, Kmax, mini=min(signalBruite), maxi=max(signalBruite)){
 	n <- length(signalBruite)
     A <- .C("colibriR_c", signal=as.double(signalBruite), n=as.integer(n), Kmax=as.integer(Kmax),   min=as.double(mini), max=as.double(maxi), path=integer(Kmax*n), cost=double(Kmax)
@@ -12,6 +77,17 @@ colibriR_c <- function(signalBruite, Kmax, mini=min(signalBruite), maxi=max(sign
     A$cost <- A$cost + sum(signalBruite^2)
     return(A);	
 } 
+
+meanRuptR_c <- function(Ym, rupt, k){
+	A <- .C("meanRuptR_c", data=as.double(Ym), position=as.integer(rupt), k=as.integer(k), res=double(k), PACKAGE="cghseg")	
+	return(A$res)
+}
+
+meansqRuptR_c <- function(Ym, rupt, k){
+	A <- .C("meansqRuptR_c", data=as.double(Ym), position=as.integer(rupt), k=as.integer(k), res=double(k), PACKAGE="cghseg")	
+	return(A$res)
+}
+
 
 retour <- function(path, i){
    chaine <- integer(i)
@@ -220,6 +296,60 @@ EMalgo <- function(x,phi,rupt,P,vh=TRUE){
 }
 
 
+compactEMalgo <- function(xk,x2k,phi,nk,P,vh=TRUE){
+  checkoptions = TRUE
+  K = length(xk)
+  
+  if (P>K){
+    checkoptions = FALSE
+    cat("Error in EMalgo : the number of groups must be lower than the number of segments","\n")
+  }
+  if (checkoptions == TRUE){
+    storage.mode(xk)<-"double"
+    storage.mode(x2k)<-"double"
+    storage.mode(nk)<-"double"
+    storage.mode(phi) <-"double"
+     .Call("sc_compactEMalgo",xk,x2k,phi,nk,as.integer(K),as.integer(P),as.logical(vh))
+  }
+  
+}
+
+quicklvinc <- function(xk,x2k,phi,nk,P,vh=TRUE){
+  checkoptions = TRUE
+  K = length(xk)
+  
+  if (P>K){
+    checkoptions = FALSE
+    cat("Error in EMalgo : the number of groups must be lower than the number of segments","\n")
+  }
+  if (checkoptions == TRUE){
+    storage.mode(xk)<-"double"
+    storage.mode(x2k)<-"double"
+    storage.mode(nk)<-"double"
+    storage.mode(phi) <-"double"
+     .Call("sc_Lvinc",xk,x2k,phi,nk,as.integer(K),as.integer(P),as.logical(vh))
+  }
+  
+}
+
+
+compactEMinit <- function(xk,x2k,nk,P,R_OMP_NUM_THREADS, vh=TRUE){
+  checkoptions = TRUE
+  K = length(xk)
+  if (P>K){
+    checkoptions = FALSE
+    cat("Error in EMinit : the number of groups must be lower than the number of segments","\n")
+  }
+  if (checkoptions == TRUE){
+    storage.mode(xk)<-"double"
+    storage.mode(x2k)<-"double"
+    storage.mode(nk)<-"double"    
+    .Call("sc_compactEMinit",xk,x2k,nk,as.integer(K),as.integer(P),as.integer(R_OMP_NUM_THREADS),as.logical(vh))
+  }
+  
+}
+
+
 EMinit <- function(x,rupt,P,vh=TRUE){
   checkoptions = TRUE
   K = dim(rupt)[1]
@@ -234,3 +364,5 @@ EMinit <- function(x,rupt,P,vh=TRUE){
   }
   
 }
+
+

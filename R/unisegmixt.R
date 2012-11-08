@@ -1,29 +1,25 @@
 unisegmixt <- function(Y,CGHo,Kmax,phi){
-  
   P            = CGHo["nblevels"]
   n.com        = length(Y)
   present.data = which(!is.na(Y))
   missing.data = which(is.na(Y))
   x            = Y[present.data]
-  #lmax         = floor(CGHo["lmax"]*length(x))
-  #out          = segmixt(x,P,Kmax,phi,CGHo["lmin"],lmax)
-  out          = segmixtGR(x,P,Kmax,phi)
-  loglik       = -out$J.est
-  t.est        = bpwmissing(out$t.est,present.data,n.com)
+  out          = ClassiSeg(x,phi[1:P],Kmax)
+	
+  loglik = sapply(1:Kmax,FUN=function(k){
+    th        = out$t.est[k,1:k]
+    rupt      = matrix(ncol=2,c(c(1,th[1:k-1]+1),th))    
+    return(lvinc(Y,phi,rupt,P))
+  })
   
-  if (CGHo["select"]=="none"){
-    Kselect = Kmax
-  } else if (CGHo["select"]!="none"){
-    Kseq    = c(1:Kmax)
-    Kselect = Kselection(Y,out$J.est,Kseq,CGHo)
-  }
-    
-  th        = t.est[Kselect,1:Kselect]
-  rupt      = matrix(ncol=2,c(c(1,th[1:Kselect-1]+1),th))    
+  t.est     = bpwmissing(out$t.est,present.data,n.com)
+  th        = t.est[Kmax,1:Kmax]
+  rupt      = matrix(ncol=2,c(c(1,th[1:Kmax-1]+1),th))
   mu        = data.frame(begin = rupt[,1],
     end   = rupt[,2],
-    mean  = apply(rupt,1,FUN=function(z) mean(Y[z[1]:z[2]], na.rm=T)))  
-
+    mean  = rep(NA,Kmax)
+    )  
+	
   invisible(list(mu=mu,loglik=loglik,t.est=t.est))
   
 }
@@ -37,4 +33,22 @@ bpwmissing <- function(t.est,present.data,n.com){
   }
   diag(t.est) = n.com
   invisible(t.est)
+}
+
+
+lvinc  <- function (Y,phi,rupt,P){
+  x           =  Y
+  logdensity  = t(apply(rupt, 1,FUN = function(y){
+    xk  = x[y[1]:y[2]]
+    xk  = xk[!is.na(xk)]
+    invisible(logdens(xk,P, phi))
+  }))
+  K       = nrow(logdensity)
+  P       = ncol(logdensity)
+  tau     = sapply(1:P,FUN = function(p){logdensity[,p]+log(phi[p+2*P])})
+  tau     = matrix(tau,ncol=P)
+  tau_max = apply(tau,1,max)
+  tau     = exp(tau-matrix(rep(tau_max,P),ncol=P))
+  lvinc   = sum(log( apply(tau,1,sum)) + tau_max)
+  return(lvinc)
 }

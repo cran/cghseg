@@ -11,6 +11,7 @@
 \alias{itermax<-,CGHoptions-method}
 \alias{print,CGHoptions-method}
 \alias{select<-,CGHoptions-method}
+\alias{nbprocs<-,CGHoptions-method}
 \alias{show,CGHoptions-method}
 
 \title{Class "CGHoptions"}
@@ -32,6 +33,9 @@ Objects can be created by calls of the form \code{new("CGHoptions")}.
     \item{\code{alpha}:}{Proportion of the individual signal length that gives uniKmax.}
     \item{\code{beta}:}{Proportion of the sum of uniKmax that gives multiKmax.}
     \item{\code{itermax}:}{Maximal number of iterations}
+    \item{\code{nbprocs}:}{Number of available computer processes}
+     \item{\code{cluster}:}{Internal slot for parallel computing on windows}
+    
   }
 }
 \section{Prototype}{
@@ -44,6 +48,7 @@ Objects can be created by calls of the form \code{new("CGHoptions")}.
 \code{CGHo@alpha       = 0.2}\cr
 \code{CGHo@beta        = 0.5}\cr
 \code{CGHo@itermax     = Inf}\cr
+\code{CGHo@nbprocs     = 1}\cr
 }
 \section{Methods}{
   \describe{
@@ -58,7 +63,9 @@ Objects can be created by calls of the form \code{new("CGHoptions")}.
     \item{nblevels<-}{Modification of slot nblevels; \code{nblevels(CGHo)<-}}
     \item{alpha<-}{Modification of slot alpha; \code{alpha(CGHo)<-}}
     \item{beta<-}{Modification of slot beta; \code{beta(CGHo)<-}}
-    \item{itermax<-}{Modification of slot itermax; \code{itermax(CGHo)<-}}
+    \item{itermax<-}{Modification of slot itermax;
+      \code{itermax(CGHo)<-}}
+    \item{nbprocs<-}{Modification of slot nbproc; \code{nbproc(CGHo)<-}}
   }
 }
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}

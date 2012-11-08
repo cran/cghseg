@@ -1,13 +1,15 @@
-
+#include <iostream>
 #include <cstdio>
-//using namespace std;
+using namespace std;
 
 
 #include "numlib.h"
-
+#include "lvinc.h"
 #include "Estep.h"
 #include "EM_algo.h"
+#include "compactEM_algo.h"
 #include "EM_init.h"
+#include "compactEM_init.h"
 #include "hybrid.h"
 #include "logdens.h"
 #include "Segmentation_mean.h"
@@ -514,6 +516,91 @@ SEXP sc_EMalgo(SEXP xR, SEXP phiR, SEXP ruptR, SEXP KR, SEXP PR, SEXP vhR)
   return res;
 }
 
+
+SEXP sc_compactEMalgo(SEXP xkR, SEXP x2kR, SEXP phiR, SEXP nkR, SEXP KR, SEXP PR, SEXP vhR)
+{
+  
+  SEXP res;
+  long K      = *(INTEGER(KR));
+  long P      = *(INTEGER(PR));
+  bool vh     = true;
+  int vhInt   = *(LOGICAL(vhR));
+  if (!vhInt)
+    vh=false;
+  double lvinc = 0;
+  int    empty = 0;
+  int    dv    = 0;
+  
+  
+  double *datak = new double[K];
+  for (int i=0;i<length(xkR);i++)
+    datak[i] = REAL(xkR)[i];
+
+  double *data2k = new double[K];
+  for (int i=0;i<length(x2kR);i++)
+    data2k[i] = REAL(x2kR)[i];
+  
+  double *datank = new double[K];
+  for (int i=0;i<length(nkR);i++)
+    datank[i] = REAL(nkR)[i];
+
+  double *phi0 = new double[length(phiR)];
+  for (int p=0;p<length(phiR);p++)
+    phi0[p] = REAL(phiR)[p];
+
+  compactEM_algo compactEMa(K,P,vh);  
+  compactEMa.Init(datak,data2k,phi0,datank);
+  compactEMa.compactEM();
+
+
+  SEXP phi_out;
+  PROTECT(phi_out = allocVector(REALSXP,3*P));
+  for (int p=0;p<3*P;p++)
+    REAL(phi_out)[p] = compactEMa._phi[p];
+  
+  SEXP tau_out;
+  PROTECT(tau_out = allocMatrix(REALSXP,K,P));
+  for (int index=0,c=0;c<P;c++)
+    for(int r=0;r<K;r++,index++)
+      REAL(tau_out)[index]= compactEMa._tau[r][c];
+  
+  SEXP lv_out;
+  SEXP empty_out;
+  SEXP dv_out;
+  
+  PROTECT(lv_out=NEW_NUMERIC(1));
+  NUMERIC_POINTER(lv_out)[0] = compactEMa._lvinc;
+  PROTECT(empty_out=NEW_INTEGER(1));
+  INTEGER_POINTER(empty_out)[0] = compactEMa._empty;
+  PROTECT(dv_out=NEW_INTEGER(1));  
+  INTEGER_POINTER(dv_out)[0] = compactEMa._dv;
+
+  PROTECT(res=allocVector(VECSXP,5));
+  SET_VECTOR_ELT(res,0,phi_out);
+  SET_VECTOR_ELT(res,1,tau_out);
+  SET_VECTOR_ELT(res,2,lv_out);
+  SET_VECTOR_ELT(res,3,empty_out);
+  SET_VECTOR_ELT(res,4,dv_out);
+
+  SEXP res_names;
+  PROTECT(res_names=allocVector(STRSXP,5));
+  SET_STRING_ELT(res_names,0,mkChar("phi"));
+  SET_STRING_ELT(res_names,1,mkChar("tau"));
+  SET_STRING_ELT(res_names,2,mkChar("lvinc"));
+  SET_STRING_ELT(res_names,3,mkChar("empty"));
+  SET_STRING_ELT(res_names,4,mkChar("dv"));
+  setAttrib(res,R_NamesSymbol,res_names);
+    
+  UNPROTECT(7);
+
+   delete[] datak;
+   delete[] data2k;
+   delete[] datank;
+   delete[] phi0;
+
+  return res;
+}
+
 SEXP sc_EMinit(SEXP xR, SEXP ruptR, SEXP KR, SEXP PR, SEXP vhR)
 {
   
@@ -559,5 +646,133 @@ SEXP sc_EMinit(SEXP xR, SEXP ruptR, SEXP KR, SEXP PR, SEXP vhR)
 }
 
 
+SEXP sc_compactEMinit(SEXP xkR, SEXP x2kR,SEXP nkR, SEXP KR, SEXP PR, SEXP OMP_NUM_THREADSR, SEXP vhR)
+{
+  
+  SEXP res;
+  long K      = *(INTEGER(KR));
+  long P      = *(INTEGER(PR));
+  bool vh     = true;
+  int vhInt   = *(LOGICAL(vhR));
+  if (!vhInt)
+    vh=false;
+  
+  double *datak = new double[K];
+  for (int i=0;i<length(xkR);i++)
+    datak[i] = REAL(xkR)[i];
+  
+  double *data2k = new double[K];
+  for (int i=0;i<length(x2kR);i++)
+    data2k[i] = REAL(x2kR)[i];
+
+  double *datank = new double[K];
+  for (int i=0;i<length(nkR);i++)
+    datank[i] = REAL(nkR)[i];
+
+  
+  compactEM_init compactEMi(K,P,*(INTEGER(OMP_NUM_THREADSR)));
+  compactEMi.Init(datak,data2k,datank);
+  compactEMi.CAH();
+  compactEMi.compute_phi();
+  
+  PROTECT(res = allocVector(REALSXP,3*P));
+  for (int p=0;p<3*P;p++)
+    REAL(res)[p] = compactEMi._phi[p];
+  
+  UNPROTECT(1);
+  
+  delete[] datak;
+  delete[] data2k;  
+  delete[] datank;
+  
+  return res;
+}
+
+
+
+SEXP sc_Lvinc(SEXP xkR, SEXP x2kR, SEXP phiR, SEXP nkR, SEXP KR, SEXP PR, SEXP vhR)
+{
+  
+  SEXP res;
+  long K      = *(INTEGER(KR));
+  long P      = *(INTEGER(PR));
+  bool vh     = true;
+  int vhInt   = *(LOGICAL(vhR));
+  if (!vhInt)
+    vh=false;
+  double lvinc = 0;
+  int    empty = 0;
+  int    dv    = 0;
+  
+  
+  double *datak = new double[K];
+  for (int i=0;i<length(xkR);i++)
+    datak[i] = REAL(xkR)[i];
+
+  double *data2k = new double[K];
+  for (int i=0;i<length(x2kR);i++)
+    data2k[i] = REAL(x2kR)[i];
+  
+  double *datank = new double[K];
+  for (int i=0;i<length(nkR);i++)
+    datank[i] = REAL(nkR)[i];
+
+  double *phi0 = new double[length(phiR)];
+  for (int p=0;p<length(phiR);p++)
+    phi0[p] = REAL(phiR)[p];
+
+  Lvinc llik(K,P,vh);  
+
+  llik.Init(datak,data2k,phi0,datank);
+  llik.lv();
+
+
+  SEXP phi_out;
+  PROTECT(phi_out = allocVector(REALSXP,3*P));
+  for (int p=0;p<3*P;p++)
+    REAL(phi_out)[p] = llik._phi[p];
+  
+  SEXP tau_out;
+  PROTECT(tau_out = allocMatrix(REALSXP,K,P));
+  for (int index=0,c=0;c<P;c++)
+    for(int r=0;r<K;r++,index++)
+      REAL(tau_out)[index]= llik._tau[r][c];
+  
+  SEXP lv_out;
+  SEXP empty_out;
+  SEXP dv_out;
+  
+  PROTECT(lv_out=NEW_NUMERIC(1));
+  NUMERIC_POINTER(lv_out)[0] = llik._lvinc;
+  PROTECT(empty_out=NEW_INTEGER(1));
+  INTEGER_POINTER(empty_out)[0] = llik._empty;
+  PROTECT(dv_out=NEW_INTEGER(1));  
+  INTEGER_POINTER(dv_out)[0] = llik._dv;
+
+  PROTECT(res=allocVector(VECSXP,5));
+  SET_VECTOR_ELT(res,0,phi_out);
+  SET_VECTOR_ELT(res,1,tau_out);
+  SET_VECTOR_ELT(res,2,lv_out);
+  SET_VECTOR_ELT(res,3,empty_out);
+  SET_VECTOR_ELT(res,4,dv_out);
+
+  SEXP res_names;
+  PROTECT(res_names=allocVector(STRSXP,5));
+  SET_STRING_ELT(res_names,0,mkChar("phi"));
+  SET_STRING_ELT(res_names,1,mkChar("tau"));
+  SET_STRING_ELT(res_names,2,mkChar("lvinc"));
+  SET_STRING_ELT(res_names,3,mkChar("empty"));
+  SET_STRING_ELT(res_names,4,mkChar("dv"));
+  setAttrib(res,R_NamesSymbol,res_names);
+    
+  UNPROTECT(7);
+
+   delete[] datak;
+   delete[] data2k;
+   delete[] datank;
+   delete[] phi0;
+
+  return res;
+}
 
 

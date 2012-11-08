@@ -21,6 +21,7 @@
 #CGHo  = new("CGHoptions")
 #CGHr  = uniseg(CGHd,CGHo)
 }
-\references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}
+\references{Joint segmentation, calling and normalization of multiple CGH profiles, Picard et al. Biostatistics (2011), Pruned dynamic programming for optimal multiple change-point detection, G. Rigaill, arXiv preprint arXiv:1004.0887 (2010)}
 \author{F. Picard, E. Lebarbier, M. Hoebeke, G. Rigaill, B. Thiam, S. Robin}
 \keyword{methods}
+

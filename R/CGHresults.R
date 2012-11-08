@@ -14,11 +14,11 @@ setClass("CGHresults",
            options          = 'CGHoptions'
            )
          )
-         
+
 setMethod("initialize",
           "CGHresults",
           function(.Object,CGHd,CGHo){
-
+            
             .Object@mu      = NULL
             .Object@theta   = NULL
             .Object@loglik  = list()
@@ -33,7 +33,7 @@ setMethod("initialize",
             if (length(names(CGHd@Y)>1)){
               .Object@theta = list(waveffect=0,GCeffect=0)
             }         
-
+            
             .Object@options          = CGHo
             .Object@genomic.position = CGHd@genomic.position
             .Object@probeID          = CGHd@probeID
@@ -139,6 +139,7 @@ setMethod(f = "getbp",signature = "CGHresults",
             }
             
             bp = lapply(names(.Object@mu),FUN = function(ell){
+              cat(ell,"\n")
               bpi = tabulate(.Object@mu[[ell]]$end)
               if (!is.null(.Object@probeID)){
                 out = data.frame(probeID = .Object@probeID,position = x,bp=bpi)

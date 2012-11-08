@@ -14,14 +14,13 @@ CGHo        = new("CGHoptions")
 alpha(CGHo) = 0.5
 }
 \details{
-  \code{CGHo["alpha"]} sets the proportion of length of each profile that
-  will be used for \code{uniKmax}. If ni is the length of profile i then
+   \code{CGHo["alpha"]} sets the proportion of length of each profile that
+  will be used for . If ni is the length of profile i then
   \deqn{\code{uniKmax[[i]]} = \alpha n_i} 
   The speed of execution of the method decreases with Kmax.
   Each Kmax must fulfill some conditions wrt \code{CGHo}: 
   \deqn{\code{uniKmax[[i]]} > \code{nblevels}}
-  \deqn{\code{uniKmax[[i]]}< n_i}
-  
+  \deqn{\code{uniKmax[[i]]}< n_i} 
 }
 \seealso{beta, getuniKmax}
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}

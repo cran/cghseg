@@ -10,7 +10,7 @@ setMethod(f = "golden.search",signature = "CGHdata",
             instr      = fun2run(CGHo)
 
             # first grid
-  
+			
             Kmax         = multiKmax-M+1
             per          = 2  #percent
             Kseq1        = seq(0,Kmax,by=floor((Kmax-1)/floor(per*Kmax/100)))+M  #K=Kmin:Kmax
@@ -32,6 +32,11 @@ setMethod(f = "golden.search",signature = "CGHdata",
             res       = eval(instr)
             Jx        = -getmBIC(multiKmax,res$loglik,res$mu,CGHo) 
 
+
+            xseq = c(x,s)
+            Jseq = c(Jx,Js)
+            
+            
             while ((x-s)>0){    
               if (Js<Jx){ 
                 b         = x
@@ -68,7 +73,10 @@ setMethod(f = "golden.search",signature = "CGHdata",
 
                 }    
               }
+              xseq=c(xseq,c(x,s))
+              Jseq=c(Jseq,c(Jx,Js))
             }
+            plot(xseq,Jseq)
             gc()
             rg  = 1:length(Kseq)
             Kh  = Kseq[which((rg>=s) & (rg<=x))]
