@@ -2,9 +2,11 @@
 
 #include <cmath>
 #include <cassert>
+
 using namespace std;
 
 #include "numlib.h"
+#include <R.h>
 
 namespace cghseg {
 
@@ -297,7 +299,7 @@ double checked_max_numlib_vector(numlib_vector *v)
 {
   double maxval=NUMLIB_NEGINF;
   for (int index=0;index<v->size;index++)
-    if (!isnan(numlib_vector_get(v,index)) && numlib_vector_get(v,index)>maxval)
+    if (!ISNAN(numlib_vector_get(v,index)) && numlib_vector_get(v,index)>maxval)
       maxval=numlib_vector_get(v,index);
 
 
@@ -310,7 +312,7 @@ int checked_max_index_numlib_vector(numlib_vector *v)
   int index=-1;
 
   for (int i=0;i<v->size;i++) {
-    if ((!isnan(numlib_vector_get(v,i))) && numlib_vector_get(v,i)>maxval) {
+    if ((!ISNAN(numlib_vector_get(v,i))) && numlib_vector_get(v,i)>maxval) {
       maxval=numlib_vector_get(v,i);
       index=i;
     }
@@ -323,7 +325,7 @@ double checked_min_numlib_vector(numlib_vector *v)
 {
   double minval=NUMLIB_POSINF;
   for (int index=0;index<v->size;index++)
-    if (!isnan(numlib_vector_get(v,index)) && numlib_vector_get(v,index)<minval)
+    if (!ISNAN(numlib_vector_get(v,index)) && numlib_vector_get(v,index)<minval)
       minval=numlib_vector_get(v,index);
 
   return minval;
@@ -335,7 +337,7 @@ int checked_min_index_numlib_vector(numlib_vector *v)
   int index=-1;
 
   for (int i=0;i<v->size;i++)
-    if ((!isnan(numlib_vector_get(v,i))) && numlib_vector_get(v,i)<minval) {
+    if ((!ISNAN(numlib_vector_get(v,i))) && numlib_vector_get(v,i)<minval) {
       minval=numlib_vector_get(v,i);
       index=i;
     }

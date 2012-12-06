@@ -7,7 +7,7 @@
 #include <gsl/gsl_blas.h>
 **/
 
-#include <cstdlib>
+#include <stdlib.h> // for malloc
 
 #include "numlib.h"
 

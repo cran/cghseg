@@ -33,7 +33,7 @@ namespace cghseg
       double tmp    = 0;
       double mintmp = _nk0[k]*(_vk0[k]+_mk0[k]*_mk0[k])-2*_nk0[k]*_mk0[k]*_mk[0] + _nk0[k]*_mk[0]*_mk[0];
       int h         = 0;
-      for (int p=1;p<_P;p++){
+      for (int p=1;p<myP;p++){
 	tmp = _nk0[k]*(_vk0[k]+_mk0[k]*_mk0[k])-2*_nk0[k]*_mk0[k]*_mk[p] + _nk0[k]*_mk[p]*_mk[p];
 	if (tmp < mintmp){
 	  mintmp = tmp;
@@ -48,15 +48,15 @@ namespace cghseg
       int j = index[k];
       tmp += _nk0[k]*(_vk0[k]+_mk0[k]*_mk0[k])-2*_nk0[k]*_mk0[k]*_mk[j] + _nk0[k]*_mk[j]*_mk[j];
     }    
-    for (int p=0;p<_P;p++){
+    for (int p=0;p<myP;p++){
       _phi[p] = _mk[p];
-      _phi[p+_P] = sqrt(tmp / _lengthx) ;
-      _phi[p+2*_P] = double(_nk[p])/_lengthx;
+      _phi[p+myP] = sqrt(tmp / _lengthx) ;
+      _phi[p+2*myP] = double(_nk[p])/_lengthx;
     }
   }
 
   void compactEM_init::CAH(){
-    for (int k=_K;k>=_P+1;k--){
+    for (int k=_K;k>=myP+1;k--){
       int imin    = 2; 
       int jmin    = 1; 
       double dmin = Dist(2,1);
@@ -141,10 +141,10 @@ namespace cghseg
 #endif
 
     _K       = nbsegments; 
-    _P       = nbclusters;
+    myP       = nbclusters;
     _D       = new double *[_K-1];
     _Dtmp    = new double [_K];
-    _phi     = new double [3*_P];
+    _phi     = new double [3*myP];
     _tau     = new double *[_K];
     _mk      = new double[_K];
     _m2k      = new double[_K];
@@ -154,14 +154,14 @@ namespace cghseg
     _vk0     = new double[_K];
     _nk0     = new int[_K];
   
-    for (int p = 0; p < 3*_P; p++)
+    for (int p = 0; p < 3*myP; p++)
       _phi[p] = 0;
   
-    _tau[0] = new double[_K*_P];
+    _tau[0] = new double[_K*myP];
     for (int k =1; k<_K; k++)
-      _tau[k] =  _tau[k-1] + _P;    
+      _tau[k] =  _tau[k-1] + myP;    
     for (int k =0; k<_K; k++){
-      for (int p =0; p<_P; p++){
+      for (int p =0; p<myP; p++){
 	_tau[k][p] = 0;
       }
     }

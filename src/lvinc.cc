@@ -16,23 +16,23 @@ namespace cghseg
   
   void Lvinc::lv(){
     
-    double pi = acos(-1);
+    double pi = acos(-1.);
     vector<double> max(_K, 0);  
     
     for (int k = 0 ;  k < _K; k++){
       double dkp = 0;
-      vector<double> logfxk(_P, 0);  
-      for (int p=0; p<_P; p++) {
+      vector<double> logfxk(myP, 0);  
+      for (int p=0; p<myP; p++) {
 	dkp = (_xkbar[k] - _phi[p])*(_xkbar[k] - _phi[p]);
-	logfxk[p] = 0.5* _nk[k] * (-(dkp+_wk[k])/(_phi[_P+p]*_phi[_P+p]) -log(2*pi*_phi[_P+p]*_phi[_P+p]) )+ log(_phi[2*_P+p]);                          
+	logfxk[p] = 0.5* _nk[k] * (-(dkp+_wk[k])/(_phi[myP+p]*_phi[myP+p]) -log(2*pi*_phi[myP+p]*_phi[myP+p]) )+ log(_phi[2*myP+p]);                          
       }
       double tmpmax = logfxk[0];
-      for (int p=1; p<_P; p++){
+      for (int p=1; p<myP; p++){
 	if (logfxk[p]>tmpmax) 
 	  tmpmax = logfxk[p];
       }     
       max[k] = tmpmax;
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	_tau[k][p] = exp(logfxk[p]-max[k]);
       }
     }
@@ -41,7 +41,7 @@ namespace cghseg
     _lvinc = 0;
     for (int k = 0 ;  k < _K; k++){
       tmp = 0;
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	tmp +=_tau[k][p]; 
       }
       _lvinc += log(tmp) +max[k];
@@ -55,7 +55,7 @@ namespace cghseg
     memcpy(_xkbar,Datak,sizeof(double)*_K);
     memcpy(_x2kbar,Data2k,sizeof(double)*_K);
     memcpy(_nk,Datank,sizeof(double)*_K);
-    memcpy(_phi,param,sizeof(double)*3*_P);
+    memcpy(_phi,param,sizeof(double)*3*myP);
 
     for (int k = 0 ;  k < _K; k++){
       _wk[k]   = _x2kbar[k] - _xkbar[k]*_xkbar[k];
@@ -69,9 +69,9 @@ namespace cghseg
   {
     
     _K          = nbsegments; 
-    _P          = nbclusters;
+    myP          = nbclusters;
     _vh         = varh;
-    _phi        = new double [3*_P];
+    _phi        = new double [3*myP];
     _tau        = new double *[_K];
     _xkbar      = new double[_K];
     _x2kbar     = new double[_K];
@@ -83,13 +83,13 @@ namespace cghseg
     _empty   = 0;
     _dv      = 0;
     
-    for (int p = 0; p < 3*_P; p++)
+    for (int p = 0; p < 3*myP; p++)
       _phi[p] = 0;
     for (int k =0; k<_K; k++){
-      _tau[k] = new double[_P];
+      _tau[k] = new double[myP];
     }
     for (int k =0; k<_K; k++){
-      for (int p =0; p<_P; p++){
+      for (int p =0; p<myP; p++){
 	_tau[k][p] = 0;
       }
     }

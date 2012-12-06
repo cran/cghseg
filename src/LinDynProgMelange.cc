@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstdlib>
+#include <Rmath.h> // for M_LN2
 
 #include "numlib.h"
 using namespace std;

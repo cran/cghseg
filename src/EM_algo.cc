@@ -15,25 +15,25 @@ namespace cghseg
   
   void EM_algo::Estep(){
     
-    double pi = acos(-1);
+    double pi = acos(-1.);
     vector<double> max(_K, 0);  
 
     
     for (int k = 0 ;  k < _K; k++){
       int nk     = _Breaks[k+1]-_Breaks[k];
       double dkp = 0;
-      vector<double> logfxk(_P, 0);  
-      for (int p=0; p<_P; p++) {
+      vector<double> logfxk(myP, 0);  
+      for (int p=0; p<myP; p++) {
 	dkp = (_xkbar[k] - _phi[p])*(_xkbar[k] - _phi[p]);
-	logfxk[p] = 0.5* nk * (-(dkp+_wk[k])/(_phi[_P+p]*_phi[_P+p]) -log(2*pi*_phi[_P+p]*_phi[_P+p]) )+ log(_phi[2*_P+p]);                          
+	logfxk[p] = 0.5* nk * (-(dkp+_wk[k])/(_phi[myP+p]*_phi[myP+p]) -log(2*pi*_phi[myP+p]*_phi[myP+p]) )+ log(_phi[2*myP+p]);                          
       }
       double tmpmax = logfxk[0];
-      for (int p=1; p<_P; p++){
+      for (int p=1; p<myP; p++){
 	if (logfxk[p]>tmpmax) 
 	  tmpmax = logfxk[p];
       }     
       max[k] = tmpmax;
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	_tau[k][p] = exp(logfxk[p]-max[k]);
       }
     }
@@ -42,7 +42,7 @@ namespace cghseg
     _lvinc = 0;
     for (int k = 0 ;  k < _K; k++){
       tmp = 0;
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	tmp +=_tau[k][p]; 
       }
       _lvinc += log(tmp) +max[k];
@@ -50,10 +50,10 @@ namespace cghseg
     
     for (int k = 0 ;  k < _K; k++){
       tmp = 0;
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	tmp +=_tau[k][p]; 
       }
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	_tau[k][p]/=tmp; 
       }
     }  
@@ -61,23 +61,23 @@ namespace cghseg
   
   void EM_algo::Mstep(){
     
-    for (int p =0;p<3*_P;p++){
+    for (int p =0;p<3*myP;p++){
       _phi[p] = 0;
     }
-    for (int p =0;p<_P;p++){
+    for (int p =0;p<myP;p++){
       double denom=0;     
       for (int k=0;k<_K;k++){       
 	int nk        = _Breaks[k+1]-_Breaks[k];
 	_phi[p]      += nk*_tau[k][p]*_xkbar[k];
-	_phi[2*_P+p] += _tau[k][p] ;
+	_phi[2*myP+p] += _tau[k][p] ;
 	denom        += nk*_tau[k][p];       
       }
       _phi[p] /=denom;
-      _phi[2*_P+p] /=_K;
+      _phi[2*myP+p] /=_K;
     }
     
     if (_vh==false){
-      for (int p =0;p<_P;p++){
+      for (int p =0;p<myP;p++){
 	double denom=0;
 	double dkp;
 	double s2p=0;
@@ -88,13 +88,13 @@ namespace cghseg
 	  denom        += nk*_tau[k][p];       
 	}
 	s2p /= denom;
-	_phi[_P+p] = sqrt(double(s2p));
+	_phi[myP+p] = sqrt(double(s2p));
       }
 
       
     } else if (_vh==true){
       double s2=0;
-      for (int p =0;p<_P;p++){
+      for (int p =0;p<myP;p++){
 	double dkp;
 	for (int k=0;k<_K;k++){
 	  dkp    = (_xkbar[k] - _phi[p])*(_xkbar[k] - _phi[p]);
@@ -103,8 +103,8 @@ namespace cghseg
 	}
       }
       s2 /=_lengthx;
-      for (int p =0;p<_P;p++){
-	_phi[_P+p] = sqrt(double(s2));  
+      for (int p =0;p<myP;p++){
+	_phi[myP+p] = sqrt(double(s2));  
       }
     }  
   } // end Mstep
@@ -112,43 +112,43 @@ namespace cghseg
   
   void EM_algo::EM(){
 
-    vector<double> delta(3*_P, 0);  
+    vector<double> delta(3*myP, 0);  
     double maxdelta = 1e-4;
     
     int iter        = 0;
-    vector<double> np(_P, 0);  
+    vector<double> np(myP, 0);  
     double eps      = 10e-10;
-    vector<double> phi_tmp(3*_P, 0);  
+    vector<double> phi_tmp(3*myP, 0);  
     double min_np = _lengthx;
     
-    for (int p=0; p<_P; p++){
+    for (int p=0; p<myP; p++){
       np[p] = 0;
     }   
     
     while ( (maxdelta>=1e-4) & (min_np>eps) & (iter<=5000) ){     
       iter       += 1;     
-      for (int p=0;p<3*_P;p++){
+      for (int p=0;p<3*myP;p++){
 	phi_tmp[p] = _phi[p];
       }     
       Estep();          
       Mstep();          
-      for (int p=0;p<_P;p++){
+      for (int p=0;p<myP;p++){
 	for (int k=0;k<_K;k++){
 	  np[p] += _tau[k][p];
 	}
       }  
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	if (np[p]<min_np) 
 	  min_np = np[p];
       }     
-      for (int p=0; p<_P; p++){
+      for (int p=0; p<myP; p++){
 	np[p] = 0;
       }
-      for (int p=0;p<3*_P;p++){
+      for (int p=0;p<3*myP;p++){
 	delta[p]= fabs((phi_tmp[p]-_phi[p])/_phi[p]);
       }
       
-      for (int p=0;p<3*_P;p++){
+      for (int p=0;p<3*myP;p++){
 	if (delta[p]<maxdelta) 
 	  maxdelta = delta[p];
       }     
@@ -172,7 +172,7 @@ namespace cghseg
   void EM_algo::Init(double *Data, double *param, int *RuptVect)
   {
     memcpy(_x,Data,sizeof(double)*_lengthx);
-    memcpy(_phi,param,sizeof(double)*3*_P);
+    memcpy(_phi,param,sizeof(double)*3*myP);
     
     for (int k = 0 ;  k < _K+1; k++){
       _Breaks[k] = RuptVect[k];
@@ -201,9 +201,9 @@ namespace cghseg
   {
     _lengthx    = n ;
     _K          = nbsegments; 
-    _P          = nbclusters;
+    myP          = nbclusters;
     _vh         = varh;
-    _phi        = new double [3*_P];
+    _phi        = new double [3*myP];
     _tau        = new double *[_K];
     _x          = new double[_lengthx];
     _xkbar      = new double[_K];
@@ -218,13 +218,13 @@ namespace cghseg
     
     for (int i = 0; i < _lengthx; i++)
       _x[i] = 0;
-    for (int p = 0; p < 3*_P; p++)
+    for (int p = 0; p < 3*myP; p++)
       _phi[p] = 0;
     for (int k =0; k<_K; k++){
-      _tau[k] = new double[_P];
+      _tau[k] = new double[myP];
     }
     for (int k =0; k<_K; k++){
-      for (int p =0; p<_P; p++){
+      for (int p =0; p<myP; p++){
 	_tau[k][p] = 0;
       }
     }

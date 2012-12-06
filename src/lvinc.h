@@ -19,7 +19,7 @@ namespace cghseg
   public:
     double    _lengthx;        // size of the data
     int       _K;              // Number of segments 
-    int       _P;              // Number of clusters
+    int       myP;              // Number of clusters
     double   *_phi;            // vector of parameters
     double    _lvinc ;         // Incomplete data loglikelihood
     int       _empty;          // =1 if empty clusters

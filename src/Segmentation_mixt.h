@@ -22,7 +22,7 @@ class Segmentation_mixt
   int     _lmax;         // maximum size for a segment
   double  *_x;           // data
   int      _Kmax;        // maximum number of segments
-  int     _P;            // number of clusters 
+  int     myP;            // number of clusters 
   double *_phi;          // mixture parameters
   double **_Cost;        // Cost matrix
   double **_D;           // matrix of the lengths of the minimum distances

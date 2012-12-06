@@ -1,4 +1,4 @@
-#include <cmath>
+#include <math.h>
 using namespace std;
 
 #include "logdens.h"

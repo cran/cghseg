@@ -2,8 +2,9 @@
 
 #ifndef USE_GSL
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h> //for malloc
+#include <string.h>
+#include <math.h>
 
 void 
 numlib_blas_ddot(numlib_vector *v1,numlib_vector *v2,double *r)

@@ -15,7 +15,7 @@ namespace cghseg
   public:
     int       _lengthx;        // size of the data
     int       _K;              // Number of segments 
-    int       _P;              // Number of clusters
+    int       myP;              // Number of clusters
     double   *_phi;            // parameters
     double   *_x;              // data
     double   *_mk;             // empirical means

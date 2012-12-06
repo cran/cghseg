@@ -80,6 +80,7 @@ typedef gsl_vector_int numlib_vector_int;
 #include <cfloat>
 #include <cmath>
 #include <limits>
+#include <R_ext/Arith.h>
 
 
 #define M_LNPI     1.14472988584940017414342735135 // Cut & Paste from GSL.
@@ -94,9 +95,9 @@ static const double NUMLIB_NEGINF=(-1.0/0.0);
 static const double NUMLIB_POSINF=(+1.0/0.0);
 
 
-#define numlib_finite(v) (std::isfinite((v)))
-#define numlib_isinf(v) (std::isinf((v)))
-#define numlib_isnan(v)(std::isnan((v)))
+#define numlib_finite(v) (R_FINITE((v)))
+#define numlib_isinf(v) (!R_FINITE((v)))
+#define numlib_isnan(v)(ISNAN((v)))
 
 typedef struct {
   int size1, size2;

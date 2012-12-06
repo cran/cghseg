@@ -27,7 +27,7 @@ namespace cghseg
   public:
     int       _lengthx;        // size of the data
     int       _K;              // Number of segments 
-    int       _P;              // Number of clusters
+    int       myP;              // Number of clusters
     double   *_phi;            // parameters
     double   *_xk;              // data
     double   *_mk;             // empirical means
@@ -83,7 +83,7 @@ namespace cghseg
     } 
     dmin = dmin_shared;
     //std::cerr<<dmin<<" "<<iimin_shared<<std::endl;
-    imin = int(floor(-0.5+sqrt(0.25+2*iimin_shared)));
+    imin = int(std::floor(-0.5+std::sqrt(0.25+2*iimin_shared)));
     jmin = iimin_shared-(imin+1)*imin/2;
     imin += 2; jmin += 1;
     //std::cerr<<dmin<<" "<<imin<<" "<<jmin<<std::endl<<std::endl;    
