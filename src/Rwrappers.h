@@ -17,6 +17,7 @@ extern "C" {
   SEXP sc_Lvinc(SEXP xkR, SEXP x2kR, SEXP phiR, SEXP nkR, SEXP KR, SEXP PR, SEXP vhR);
   SEXP sc_EMinit(SEXP xR, SEXP ruptR, SEXP KR, SEXP PR, SEXP vhR);
   SEXP sc_compactEMinit(SEXP xR,SEXP x2R, SEXP nkR, SEXP KR, SEXP PR, SEXP OMP_NUM_THREADSR, SEXP vhR);
+  /*    SEXP sc_compactEMinitReg(SEXP xR,SEXP x2R, SEXP yR, SEXP y2R, SEXP xyR, SEXP nkR, SEXP KR, SEXP PR, SEXP OMP_NUM_THREADSR, SEXP vhR);*/
 }
 
 #endif

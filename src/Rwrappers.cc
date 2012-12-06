@@ -10,6 +10,7 @@ using namespace std;
 #include "compactEM_algo.h"
 #include "EM_init.h"
 #include "compactEM_init.h"
+/*#include "compactEM_init_Reg.h"*/
 #include "hybrid.h"
 #include "logdens.h"
 #include "Segmentation_mean.h"
@@ -646,6 +647,7 @@ SEXP sc_EMinit(SEXP xR, SEXP ruptR, SEXP KR, SEXP PR, SEXP vhR)
 }
 
 
+
 SEXP sc_compactEMinit(SEXP xkR, SEXP x2kR,SEXP nkR, SEXP KR, SEXP PR, SEXP OMP_NUM_THREADSR, SEXP vhR)
 {
   
@@ -687,6 +689,65 @@ SEXP sc_compactEMinit(SEXP xkR, SEXP x2kR,SEXP nkR, SEXP KR, SEXP PR, SEXP OMP_N
   
   return res;
 }
+
+
+/*SEXP sc_compactEMinit_Reg(SEXP xkR, SEXP x2kR,SEXP ykR, SEXP y2kR, SEXP xykR, SEXP nkR, SEXP KR, SEXP PR, SEXP OMP_NUM_THREADSR, SEXP vhR)
+{
+  
+  SEXP res;
+  long K      = *(INTEGER(KR));
+  long P      = *(INTEGER(PR));
+  bool vh     = true;
+  int vhInt   = *(LOGICAL(vhR));
+  if (!vhInt)
+    vh=false;
+  
+  double *dataxk = new double[K];
+  for (int i=0;i<length(xkR);i++)
+    dataxk[i] = REAL(xkR)[i];
+  
+  double *datax2k = new double[K];
+  for (int i=0;i<length(x2kR);i++)
+    datax2k[i] = REAL(x2kR)[i];
+
+  double *datayk = new double[K];
+  for (int i=0;i<length(ykR);i++)
+    datayk[i] = REAL(ykR)[i];
+  
+  double *datay2k = new double[K];
+  for (int i=0;i<length(y2kR);i++)
+    datay2k[i] = REAL(y2kR)[i];
+  
+  double *dataxyk = new double[K];
+  for (int i=0;i<length(xykR);i++)
+    dataxyk[i] = REAL(xykR)[i];
+
+  double *datank = new double[K];
+  for (int i=0;i<length(nkR);i++)
+    datank[i] = REAL(nkR)[i];
+
+  
+  compactEM_init_Reg compactEMiReg(K,P,*(INTEGER(OMP_NUM_THREADSR)));
+  compactEMiReg.Init(dataxk,datax2k,datayk,datay2k,dataxyk,datank);
+  compactEMiReg.CAH_Reg();
+  compactEMiReg.compute_phi_Reg();
+  
+  PROTECT(res = allocVector(REALSXP,6*P));
+  for (int p=0;p<6*P;p++)
+    REAL(res)[p] = compactEMiReg._phi[p];
+  
+  UNPROTECT(1);
+  
+  delete[] dataxk;
+  delete[] datax2k;  
+  delete[] datayk;
+  delete[] datay2k;  
+  delete[] dataxyk;
+  delete[] datank;
+  
+  return res;
+  }*/
+
 
 
 

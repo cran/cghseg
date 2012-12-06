@@ -1,6 +1,6 @@
 setMethod(f = "multisegclust",signature = "CGHdata",
           definition = function(.Object,CGHo,uniKmax,multiKmax){			  
-            
+
             P            = CGHo["nblevels"]
             tol          = 1e-2
             select.tmp   = CGHo["select"]
@@ -10,39 +10,28 @@ setMethod(f = "multisegclust",signature = "CGHdata",
             iter         = 0
             eps          = Inf		
             
-            if (CGHo@nbprocs>1){
-				if (Sys.info()["sysname"] == "Windows"){
-					## Initial data sends, will be reused but not resend
-					## Data are emulated to belong to .GlobalEnv
-					## since worker function will also belong to .GlobalEnv
-					assign("Y.ref", .Object@Y, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "Y.ref")
-					assign("uniKmax.ref", uniKmax, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "uniKmax.ref")
-					assign("CGHo.ref", CGHo, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "CGHo.ref")
-				}
-            }
-            
-	    mu        = multisegmean(.Object,CGHo,uniKmax,multiKmax)$mu
+			mu        = multisegmean(.Object,CGHo,uniKmax,multiKmax)$mu
             out.DP2EM = DP2EM(.Object,mu)
             phi       = compactEMinit(out.DP2EM$xk,out.DP2EM$x2k,out.DP2EM$nk,P,CGHo@nbprocs,vh=TRUE)
             out.EM    = compactEMalgo(out.DP2EM$xk,out.DP2EM$x2k,phi,out.DP2EM$nk,P,vh=TRUE)            
             n.com     = length(.Object@Y[[1]])
             mu.test   = ILSclust.output(.Object,mu,out.EM$phi,out.EM$tau)
-	    mu.tmp    = mu.test	
+			mu.tmp    = mu.test	
             
-            while ( (eps > tol) & (iter < CGHo@itermax) ){   
+            while ( (eps > tol) & (iter < CGHo@itermax) & (out.EM$empty==0)){   
               iter       = iter+1 
               mu         = multisegmixt(.Object,CGHo,uniKmax,multiKmax,out.EM$phi)$mu
               out.DP2EM  = DP2EM(.Object,mu)
-	      out.EM     = compactEMalgo(out.DP2EM$xk,out.DP2EM$x2k,phi,out.DP2EM$nk,P,vh=TRUE)			  
+			  out.EM     = compactEMalgo(out.DP2EM$xk,out.DP2EM$x2k,phi,out.DP2EM$nk,P,vh=TRUE)			  
               mu.test    = ILSclust.output(.Object,mu,out.EM$phi,out.EM$tau) 
               eps        = max(sapply(names(.Object@Y),FUN=function(m,x,y){xk = rep(x[[m]]$mean,x[[m]]$end-x[[m]]$begin+1); yk =rep(y[[m]]$mean,y[[m]]$end-y[[m]]$begin+1) ; return(max(abs((xk-yk)/xk)))},mu.tmp,mu.test))
-	      mu.tmp     = mu.test
+			  mu.tmp     = mu.test
             } # end while
 			
-            
+            if (out.EM$empty!=0){
+              cat("[multisegclust ERROR]: convergence to a solution with empty levels.","\n");
+              stop("[multisegclust ERROR]: try a lower nblevels(CGHo)","\n");
+            }
 ######   output   #####################################################################
             out.DP2EM    = DP2EM(.Object,mu)
             loglik       = quicklvinc(out.DP2EM$xk,out.DP2EM$x2k,out.EM$phi,out.DP2EM$nk,P,vh=TRUE)$lvinc

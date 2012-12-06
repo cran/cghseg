@@ -1,8 +1,3 @@
-setClass("SOCKcluster")
-setClass("cluster")
-setClassUnion("parallelCluster", c("SOCKcluster", "cluster"))
-
-
 setClass("CGHoptions",
          representation=list(
            select    = 'character',
@@ -13,7 +8,6 @@ setClass("CGHoptions",
            alpha     = 'numeric',
            beta      = 'numeric',
            nbprocs   = 'numeric',
-           cluster   = 'parallelCluster',
            itermax   = 'numeric'),
          prototype(select    = "mBIC",
                    calling   = FALSE,
@@ -23,7 +17,6 @@ setClass("CGHoptions",
                    alpha     = 0.2,
                    beta      = 0.5,
                    nbprocs   = 1,
-                   cluster = makeCluster(getOption("cl.cores", 0)),
                    itermax   = Inf)
          )
 
@@ -39,7 +32,6 @@ setMethod(
             if (i=="alpha")      {return(x@alpha)}       else {}
             if (i=="beta")       {return(x@beta)}        else {}
             if (i=="nbprocs")    {return(x@nbprocs)}     else {}
-            if (i=="cluster")    {return(x@cluster)}     else {}
             if (i=="itermax")    {return(x@itermax)}     else {}
           }          
           )
@@ -49,7 +41,7 @@ setMethod(
           signature = "CGHoptions",
           definition = function(x){
             cat("****** CGHoption print ******\n")
-            A = data.frame(options = rep(NA,10), value = rep(NA,10),row.names=NULL)
+            A = data.frame(options = rep(NA,9), value = rep(NA,9),row.names=NULL)
             A[1,1]  = "select"
             A[1,2]  = x@select
             A[2,1]  = "calling"
@@ -66,10 +58,8 @@ setMethod(
             A[7,2]  = x@beta
             A[8,1]  = "nbprocs"
             A[8,2]  = x@nbprocs            
-            A[9,1]  = "cluster"
-            A[9,2]  = x@cluster           
-            A[10,1]  = "itermax"
-            A[10,2]  = x@itermax
+            A[9,1]  = "itermax"
+            A[9,2]  = x@itermax
             print(A)            
           }          
           )
@@ -79,7 +69,7 @@ setMethod(
           signature = "CGHoptions",
           definition = function(object){
             cat("****** CGHoption show ******\n")
-            A = data.frame(options = rep(NA,10), value = rep(NA,10))
+            A = data.frame(options = rep(NA,9), value = rep(NA,9))
             A[1,1]  = "select"
             A[1,2]  = object@select
             A[2,1]  = "calling"
@@ -96,10 +86,8 @@ setMethod(
             A[7,2]  = object@beta
             A[8,1]  = "nbprocs"
             A[8,2]  = object@nbprocs
-            A[9,1]  = "cluster"
-            A[9,2]  = object@cluster
-            A[10,1]  = "itermax"
-            A[10,2]  = object@itermax
+            A[9,1]  = "itermax"
+            A[9,2]  = object@itermax
             print(A)            
           }          
           )
@@ -177,17 +165,6 @@ setReplaceMethod(
                    return (object)
                  }
                  )
-				 
-setGeneric("cluster<-",function(object,value){standardGeneric("cluster<-")})
-setReplaceMethod(
-				 f="cluster",
-				 signature="CGHoptions",
-				 definition=function(object,value){
-					 object@cluster =value
-					 return (object)
-				 }
-				 )
-				 				 				
 setGeneric("itermax<-",function(object,value){standardGeneric("itermax<-")})
 setReplaceMethod(
                  f="itermax",

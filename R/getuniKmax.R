@@ -12,27 +12,16 @@ setMethod(f = "getuniKmax",signature = "CGHdata",
               calling(CGHo) = FALSE
 			  select(CGHo)  = "mBIC"
 			  if (CGHo@nbprocs>1){
-				if (Sys.info()["sysname"] == "Windows"){
-				 	CGHo@cluster <- makeCluster(getOption("cl.cores", CGHo@nbprocs)) 
-				  	uniKmax = parLapply(CGHo@cluster, .Object@Y, fun = function(y){
-								  Kmax = floor(sum(!is.na(y)))*CGHo["alpha"]
-								  Kmax = min(200,Kmax)
-								  dim(unisegmean(y,CGHo,Kmax)$mu)[1]
-						  		}) # fun argument instead of FUN
-				  	stopCluster(CGHo@cluster)
-				}
-				else{
 				  uniKmax = mclapply(.Object@Y, FUN = function(y){
-							  Kmax = floor(sum(!is.na(y)))*CGHo["alpha"]
+							  Kmax = floor(sum(!is.na(y))*CGHo["alpha"])
 							  Kmax = min(200,Kmax)
 							  dim(unisegmean(y,CGHo,Kmax)$mu)[1]
 #						  	}) # fun argument instead of FUN
-							}, mc.cores = CGHo@nbprocs)
-				}
-			  }
+						  }, mc.cores = CGHo@nbprocs)
+			  }			  
 			  else{
 				  uniKmax = lapply(.Object@Y,FUN = function(y){
-							  Kmax = floor(sum(!is.na(y)))*CGHo["alpha"]
+							  Kmax = floor(sum(!is.na(y))*CGHo["alpha"])
 							  Kmax = min(200,Kmax)
 							  dim(unisegmean(y,CGHo,Kmax)$mu)[1]
 						  })

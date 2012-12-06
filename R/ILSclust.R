@@ -16,20 +16,6 @@ setMethod(f = "ILSclust",signature = "CGHdata",
             delta    = Inf
             iter     = 0
             
-			if (CGHo@nbprocs>1){
-				if (Sys.info()["sysname"] == "Windows"){
-					## Initial data sends, will be reused but not resend
-					## Data are emulated to belong to .GlobalEnv
-					## since worker function will also belong to .GlobalEnv
-					assign("Y.ref", .Object@Y, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "Y.ref")
-					assign("uniKmax.ref", uniKmax, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "uniKmax.ref")
-					assign("CGHo.ref", CGHo, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "CGHo.ref")
-				}
-			}
-			
             mu        = multisegmean(.Object,CGHo,uniKmax,multiKmax)$mu
             out.DP2EM = DP2EM(.Object,mu)
             phi       = compactEMinit(out.DP2EM$xk,out.DP2EM$x2k,out.DP2EM$nk,P,CGHo@nbprocs,vh=TRUE)
@@ -37,7 +23,7 @@ setMethod(f = "ILSclust",signature = "CGHdata",
             mu.test   = ILSclust.output(.Object,mu,out.EM$phi,out.EM$tau)           
             mu.tmp    = mu.test            
             
-            while (  (eps > tol) & (iter < CGHo@itermax) ){
+            while (  (eps > tol) & (iter < CGHo@itermax) & (out.EM$empty==0)){
               iter                = iter+1
               B                   = getbias(.Object,CGHo,mu,B,out.EM$phi,out.EM$tau)
               removebias(.Object) = B$waveffect+B$GCeffect
@@ -52,7 +38,11 @@ setMethod(f = "ILSclust",signature = "CGHdata",
                 return(max(abs((xk-yk)/xk)))},mu.tmp,mu.test)
                 )              
 	      mu.tmp              = mu.test              
-            }
+            }		
+            if (out.EM$empty!=0){
+              cat("[ILSclust ERROR]: convergence to a solution with empty levels.","\n");
+              stop("[ILSclust ERROR]: try a lower nblevels(CGHo)","\n");
+            }            
             out.DP2EM    = DP2EM(.Object,mu,theta=Reduce("+",B))
             loglik       = quicklvinc(out.DP2EM$xk,out.DP2EM$x2k,out.EM$phi,out.DP2EM$nk,P,vh=TRUE)$lvinc
             select(CGHo) = select.tmp

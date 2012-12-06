@@ -27,7 +27,7 @@ unisegclust <- function(Y,CGHo,Kmax){
       iter      = 0
       pred      = rep(mu$mean,c(mu$end-mu$begin+1))
       eps       = Inf      
-      while ( (eps > tol) & (iter < CGHo@itermax) ){          
+      while ( (eps > tol) & (iter < CGHo@itermax) & (out.EM$empty==0) ){          
         iter     = iter+1
         pred.tmp = pred
         t.est    = ClassiSeg(x,out.EM$phi[1:P],K)$t.est[K,]
@@ -37,9 +37,14 @@ unisegclust <- function(Y,CGHo,Kmax){
         pred     = rep(mu$mean,c(mu$end-mu$begin+1))
         eps      = max(abs((pred-pred.tmp)/(pred)))
       }
+      if (out.EM$empty!=0){
+        cat("[unisegclust ERROR]: convergence to a solution with empty levels.","\n");
+        stop("[unisegclust ERROR]: try a lower nblevels(CGHo)","\n");
+      }
       mu$levels  = apply(out.EM$tau,1,which.max)
       mBIC[K]    = getmBIC(K,out.EM$lvinc,list(aux=mu),CGHo)
     }
+
     K         = which.max(mBIC)
     mu        = unisegmean(x,CGHo,K)$mu
     phi       = EMinit(x,as.matrix(mu[,-3]),P,vh=TRUE)
@@ -48,7 +53,7 @@ unisegclust <- function(Y,CGHo,Kmax){
     iter      = 0
     pred      = rep(mu$mean,c(mu$end-mu$begin+1))
     eps       = Inf      
-    while ( (eps > tol) & (iter < CGHo@itermax) ){          
+    while ( (eps > tol) & (iter < CGHo@itermax) & (out.EM$empty==0) ){          
       iter     = iter+1
       pred.tmp = pred
       t.est    = ClassiSeg(x,out.EM$phi[1:P],K)$t.est[K,]
@@ -57,6 +62,10 @@ unisegclust <- function(Y,CGHo,Kmax){
       mu$mean  = out.EM$phi[apply(out.EM$tau,1,which.max)]
       pred     = rep(mu$mean,c(mu$end-mu$begin+1))
       eps      = max(abs((pred-pred.tmp)/(pred)))
+    }
+    if (out.EM$empty!=0){
+      cat("[unisegclust ERROR]: convergence to a solution with empty levels.","\n");
+      stop("[unisegclust ERROR]: try a lower nblevels(CGHo)","\n");
     }
     mu$levels    = apply(out.EM$tau,1,which.max)
     select(CGHo) = select.tmp
@@ -71,7 +80,7 @@ unisegclust <- function(Y,CGHo,Kmax){
     iter      = 0
     pred      = rep(mu$mean,c(mu$end-mu$begin+1))
     eps       = Inf      
-    while ( (eps > tol) & (iter < CGHo@itermax) ){          
+    while ( (eps > tol) & (iter < CGHo@itermax) & (out.EM$empty==0) ){          
       iter     = iter+1
       pred.tmp = pred
       t.est    = ClassiSeg(x,out.EM$phi[1:P],K)$t.est[K,]
@@ -80,6 +89,10 @@ unisegclust <- function(Y,CGHo,Kmax){
       mu$mean  = out.EM$phi[apply(out.EM$tau,1,which.max)]
       pred     = rep(mu$mean,c(mu$end-mu$begin+1))
       eps      = max(abs((pred-pred.tmp)/(pred)))
+    }
+    if (out.EM$empty!=0){
+      cat("[unisegclust ERROR]: convergence to a solution with empty levels.","\n");
+      stop("[unisegclust ERROR]: try a lower nblevels(CGHo)","\n");
     }
     mu$levels  = apply(out.EM$tau,1,which.max)
   }
@@ -90,9 +103,9 @@ unisegclust <- function(Y,CGHo,Kmax){
   rupt    = matrix(ncol=2,c(c(1,th[1:length(th)-1]+1),th))    
   mu      = data.frame(begin = rupt[,1],
     end   = rupt[,2],
-    mean  =  out.EM$phi[apply(out.EM$tau,1,which.max)])
-  invisible(list(mu=mu,loglik=out.EM$lvinc))      
-  
+    mean  =  out.EM$phi[apply(out.EM$tau,1,which.max)],
+    levels = mu$levels)
+  invisible(list(mu=mu,loglik=out.EM$lvinc))        
 }
 
 bpwmissing.calls <- function(t.est,present.data,n.com){

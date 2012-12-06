@@ -34,8 +34,6 @@ Objects can be created by calls of the form \code{new("CGHoptions")}.
     \item{\code{beta}:}{Proportion of the sum of uniKmax that gives multiKmax.}
     \item{\code{itermax}:}{Maximal number of iterations}
     \item{\code{nbprocs}:}{Number of available computer processes}
-     \item{\code{cluster}:}{Internal slot for parallel computing on windows}
-    
   }
 }
 \section{Prototype}{

@@ -10,22 +10,6 @@ setMethod(f = "multisegmean",signature = "CGHdata",
 ######   Individual segmentations for patients 
             if (CGHo@nbprocs>1){           
 				#cat("multisegmean //               \r")	
-				if (Sys.info()["sysname"] == "Windows"){   			
-					unisegmean.proxy <- function(m){
-						Y.ref						= get("Y.ref", envir = .GlobalEnv)
-						CGHo.ref					= get("CGHo.ref", envir = .GlobalEnv)
-						uniKmax.ref					= get("uniKmax.ref", envir = .GlobalEnv)
-						n                           = length(which(!is.na(Y.ref[[m]])))
-						Kmax                        = uniKmax.ref[[m]]
-						out                         = unisegmean(Y.ref[[m]],CGHo.ref,Kmax)
-						J.est                       = n*exp(-((2/n)*out$loglik+log(2*pi)+1))
-						invisible(list(t.est = out$t.est, loglik = out$loglik,J.est=J.est))
-					}
-					environment(unisegmean.proxy) <- .GlobalEnv
-					clusterExport(CGHo@cluster, "unisegmean")	# to be know in unisegmixt.proxy
-					Res = parLapply(CGHo@cluster, names(.Object@Y), fun = unisegmean.proxy) 
-					names(Res) = names(.Object@Y)
-				} else{
 					Res = mclapply(names(.Object@Y), FUN = function(m){
 								n                           = length(which(!is.na(.Object@Y[[m]])))
 								Kmax                        = uniKmax[[m]]
@@ -33,9 +17,9 @@ setMethod(f = "multisegmean",signature = "CGHdata",
 								J.est                       = n*exp(-((2/n)*out$loglik+log(2*pi)+1))
 								invisible(list(t.est = out$t.est, loglik = out$loglik,J.est=J.est))
 							}, mc.cores = CGHo@nbprocs)
-					names(Res) = names(.Object@Y)					
-				}
-            } else {
+					names(Res) = names(.Object@Y)							
+            } 
+			else {
               Res = lapply(names(.Object@Y), FUN = function(m){
                 n                           = length(which(!is.na(.Object@Y[[m]])))
                 Kmax                        = uniKmax[[m]]
@@ -60,28 +44,23 @@ setMethod(f = "multisegmean",signature = "CGHdata",
             if (select.tmp=="none"){
               multiKselect = multiKmax
               dimll        = length(multiloglik)
-            } else if (select.tmp=="mBIC"){
-              if (CGHo@nbprocs>1){	
+            } 
+			else if (select.tmp=="mBIC"){
+				if (CGHo@nbprocs>1){	
                 #cat("multisegmean // part 2                  \r")
-				if (Sys.info()["sysname"] == "Windows"){ 				
-					mBIC = parSapply(CGHo@cluster, Kseq, FUN=function(K){
-								mu      = multisegout(.Object,seg.rep,Res,K)
-								getmBIC(K,multiloglik[K-M+1],mu,CGHo)     
-							})
-				} else{
 					mBIC = mclapply(Kseq,FUN=function(K){
 								mu      = multisegout(.Object,seg.rep,Res,K)
 								getmBIC(K,multiloglik[K-M+1],mu,CGHo)     
 							}, mc.cores = CGHo@nbprocs)
 				}
-              } else {
-                mBIC = sapply(Kseq,FUN=function(K){
-                  mu      = multisegout(.Object,seg.rep,Res,K)
-                  getmBIC(K,multiloglik[K-M+1],mu,CGHo)     
-                })
-              }  			
-              multiKselect = Kseq[which.max(mBIC)]
-              dimll        = multiKselect
+				else {
+                	mBIC = sapply(Kseq,FUN=function(K){
+                  		mu      = multisegout(.Object,seg.rep,Res,K)
+                  		getmBIC(K,multiloglik[K-M+1],mu,CGHo)     
+                		})
+              	}  			
+              	multiKselect = Kseq[which.max(mBIC)]
+              	dimll        = multiKselect
             }
             
 ######   Outputs   

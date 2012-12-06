@@ -349,6 +349,26 @@ compactEMinit <- function(xk,x2k,nk,P,R_OMP_NUM_THREADS, vh=TRUE){
   
 }
 
+##compactEMinitReg <- function(xk,x2k,yk,y2k,xyk,nk,P,R_OMP_NUM_THREADS, vh=TRUE){
+##  checkoptions = TRUE
+##  K = length(xk)
+##  if (P>K){
+##    checkoptions = FALSE
+##    cat("Error in EMinit : the number of groups must be lower than the number of segments","\n")
+##  }
+##  if (checkoptions == TRUE){
+##    storage.mode(xk)<-"double"
+##    storage.mode(x2k)<-"double"
+##    storage.mode(yk)<-"double"
+##    storage.mode(y2k)<-"double"
+##    storage.mode(xyk)<-"double"
+##    storage.mode(nk)<-"double"    
+##    .Call("sc_compactEMinit",xk,x2k,yk,y2k,xyk,nk,as.integer(K),as.integer(P),as.integer(R_OMP_NUM_THREADS),as.logical(vh))
+##  }  
+##}
+
+
+
 
 EMinit <- function(x,rupt,P,vh=TRUE){
   checkoptions = TRUE

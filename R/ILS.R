@@ -12,23 +12,9 @@ setMethod(f = "ILS",signature = "CGHdata",
             eps      = Inf
             iter     = 0
             
-            if (CGHo@nbprocs>1){
-				if (Sys.info()["sysname"] == "Windows"){	
-					## Initial data sends, will be reused but not resend
-					## Data are emulated to belong to .GlobalEnv
-					## since worker function will also belong to .GlobalEnv
-					assign("Y.ref", .Object@Y, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "Y.ref")
-					assign("uniKmax.ref", uniKmax, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "uniKmax.ref")
-					assign("CGHo.ref", CGHo, envir = .GlobalEnv)
-					clusterExport(CGHo@cluster, "CGHo.ref")
-				}
-            }
-            
             mu       = multisegmean(.Object,CGHo,uniKmax,multiKmax)$mu
             B        = list(waveffect = rep(0,n.com), GCeffect = rep(0,n.com))
-	    mu.tmp   = mu 
+			mu.tmp   = mu 
             
             while ( (eps > tol) & (iter < CGHo@itermax)){
               iter                = iter+1
@@ -40,7 +26,7 @@ setMethod(f = "ILS",signature = "CGHdata",
                 xk = rep(x[[m]]$mean,x[[m]]$end-x[[m]]$begin+1);
                 yk =rep(y[[m]]$mean,y[[m]]$end-y[[m]]$begin+1) ;
                 return(max(abs((xk-yk)/xk)))},mu.tmp,mu))
-	      mu.tmp = mu
+				mu.tmp = mu
             } # end while
             
             out.DP2EM    = DP2EM(.Object,mu,theta=Reduce("+",B))
