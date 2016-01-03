@@ -8,8 +8,7 @@
 #include <vector>
 #include <cstring>
 
-#include <Rconfig.h>
-#ifdef SUPPORT_OPENMP
+#ifdef _OPENMP
   #include <omp.h>
 #endif
 
@@ -136,7 +135,7 @@ namespace cghseg
 
 
   compactEM_init::compactEM_init(int nbsegments, int nbclusters, int OMP_NUM_THREADS){
-#ifdef SUPPORT_OPENMP
+#ifdef _OPENMP
     omp_set_num_threads(OMP_NUM_THREADS);
 #endif
 

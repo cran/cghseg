@@ -14,6 +14,7 @@ namespace cghseg
 
   ostream & operator << (ostream &s, const Segmentation_ibp &Seg_ibp)
   {
+      return s;
   }
   
   
