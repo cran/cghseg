@@ -38,8 +38,7 @@ unisegclust <- function(Y,CGHo,Kmax){
         eps      = max(abs((pred-pred.tmp)/(pred)))
       }
       if (out.EM$empty!=0){
-        cat("[unisegclust ERROR]: convergence to a solution with empty levels.","\n");
-        stop("[unisegclust ERROR]: try a lower nblevels(CGHo)","\n");
+        stop("[unisegclust ERROR]: convergence to a solution with empty levels.","\n","try a lower nblevels(CGHo)","\n");
       }
       mu$levels  = apply(out.EM$tau,1,which.max)
       mBIC[K]    = getmBIC(K,out.EM$lvinc,list(aux=mu),CGHo)
@@ -64,8 +63,7 @@ unisegclust <- function(Y,CGHo,Kmax){
       eps      = max(abs((pred-pred.tmp)/(pred)))
     }
     if (out.EM$empty!=0){
-      cat("[unisegclust ERROR]: convergence to a solution with empty levels.","\n");
-      stop("[unisegclust ERROR]: try a lower nblevels(CGHo)","\n");
+      stop("[unisegclust ERROR]: convergence to a solution with empty levels.","\n", "try a lower nblevels(CGHo)","\n");
     }
     mu$levels    = apply(out.EM$tau,1,which.max)
     select(CGHo) = select.tmp
@@ -91,8 +89,7 @@ unisegclust <- function(Y,CGHo,Kmax){
       eps      = max(abs((pred-pred.tmp)/(pred)))
     }
     if (out.EM$empty!=0){
-      cat("[unisegclust ERROR]: convergence to a solution with empty levels.","\n");
-      stop("[unisegclust ERROR]: try a lower nblevels(CGHo)","\n");
+      stop("[unisegclust ERROR]: convergence to a solution with empty levels.","\n", "try a lower nblevels(CGHo)","\n");
     }
     mu$levels  = apply(out.EM$tau,1,which.max)
   }

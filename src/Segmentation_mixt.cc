@@ -45,7 +45,7 @@ namespace cghseg
       int pos_min  = k;
       int       a  = k*_lmin;
       int       b  = min(k*_lmax+1,i-_lmin+2);
-      int       h2 = 0;
+      
       double   min = numeric_limits<double>::max();
 
       for (int h = a; h < b; h++){
@@ -70,7 +70,7 @@ namespace cghseg
 void Segmentation_mixt::Init(double *Data, double *param)
 {
 
-  double aux,Cij;
+  double Cij;
   double pi = acos(-1.);
   memcpy(_x,Data,sizeof(double)*_lengthx);
   memcpy(_phi,param,sizeof(double)*3*myP);

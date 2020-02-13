@@ -436,9 +436,9 @@ SEXP sc_EMalgo(SEXP xR, SEXP phiR, SEXP ruptR, SEXP KR, SEXP PR, SEXP vhR)
   int vhInt   = *(LOGICAL(vhR));
   if (!vhInt)
     vh=false;
-  double lvinc = 0;
-  int    empty = 0;
-  int    dv    = 0;
+  
+  
+  
   
   
   double *data = new double[lengthx];
@@ -528,9 +528,8 @@ SEXP sc_compactEMalgo(SEXP xkR, SEXP x2kR, SEXP phiR, SEXP nkR, SEXP KR, SEXP PR
   int vhInt   = *(LOGICAL(vhR));
   if (!vhInt)
     vh=false;
-  double lvinc = 0;
-  int    empty = 0;
-  int    dv    = 0;
+
+
   
   
   double *datak = new double[K];
@@ -761,9 +760,6 @@ SEXP sc_Lvinc(SEXP xkR, SEXP x2kR, SEXP phiR, SEXP nkR, SEXP KR, SEXP PR, SEXP v
   int vhInt   = *(LOGICAL(vhR));
   if (!vhInt)
     vh=false;
-  double lvinc = 0;
-  int    empty = 0;
-  int    dv    = 0;
   
   
   double *datak = new double[K];

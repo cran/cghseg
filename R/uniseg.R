@@ -6,10 +6,10 @@ setMethod(f = "uniseg",signature = "CGHdata",
             from(CGHr) = "uniseg"
 
             if (CGHo["wavenorm"]!="none"){
-              cat("[uniseg] CGHo[\"wavenorm\"] is not considered in uniseg \n")
+              message("[uniseg] CGHo[\"wavenorm\"] is not considered in uniseg \n")
             }
             if (CGHo["GCnorm"]!="none"){
-              cat("[uniseg] CGHo[\"GCnorm\"] is not considered in uniseg \n")
+              message("[uniseg] CGHo[\"GCnorm\"] is not considered in uniseg \n")
             }
             
             if (CGHo["calling"]){

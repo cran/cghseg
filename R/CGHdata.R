@@ -22,8 +22,7 @@ setMethod(
             }
             if ("genomic.position" %in% colnames(Y)){
               if (is.unsorted(Y$genomic.position)){
-                cat("[raw data: error] sort genomic.positions \n")
-                stop()
+                stop("[raw data: error] sort genomic.positions \n")
               } else {              
                 j = which(colnames(Y)=="genomic.position")
                 .Object@genomic.position = Y[,j]
@@ -35,9 +34,8 @@ setMethod(
             
             if ("probeID" %in% colnames(Y)){
               if (sum(duplicated(Y$probeID)>0)){
-                cat("[raw data: error] remove duplicated names in probeID \n")
-                stop()
-              } else {                
+                stop("[raw data: error] remove duplicated names in probeID \n")
+                } else {                
                 j = which(colnames(Y)=="probeID")              
                 .Object@probeID = Y[,j]
                 Y = Y[,-j]
@@ -57,30 +55,29 @@ setMethod(
             #                                      #
             ########################################
             
-            cat("[raw data: check] minimum number of positions per signal \n")
+            message("[raw data: check] minimum number of positions per signal \n")
             n.com    = dim(Y)[1]
             min.ncom = 10
             
             if ( n.com<min.ncom){
-              cat("[raw data: check] Problem with dataset \n")
-              stop("[raw data: check] It must contain more than ", min.ncom , " points \n")
+             stop("[raw data: check] Problem with dataset \n It must contain more than ", min.ncom , " points \n")
             }            
             
             if (patient.status=="M"){
-              cat("[raw data: check] number of records per position \n")
+              message("[raw data: check] number of records per position \n")
               j        = which(apply((apply(Y,1,is.na)),2,sum)==dim(Y)[2])   
               if (length(j) > 0){
-                cat("[raw data: check] Problem with non observed positions \n")
-                cat("Position(s) number", j ," is/are missing in every patient(s) \n")
+                message("[raw data: check] Problem with non observed positions \n")
+                message("Position(s) number", j ," is/are missing in every patient(s) \n")
               }
             } else {
-              cat("[raw data: check] number of records per position \n")
+              message("[raw data: check] number of records per position \n")
               if (sum(is.na(Y))>0){
-                cat("[raw data: check] Problem with non observed positions \n")
-                cat("Position(s) number", which(is.na(Y))," is/are missing \n")
+                message("[raw data: check] Problem with non observed positions \n")
+                message("Position(s) number", which(is.na(Y))," is/are missing \n")
               }
             }
-            cat("[raw data: format] changing dataframe to compact format (list) \n")
+            message("[raw data: format] changing dataframe to compact format (list) \n")
             
             Res = lapply(names(Y), FUN = function(m){
               Y[,names(Y)==m]
@@ -155,39 +152,39 @@ setMethod(
           f = "summary",
           signature = "CGHdata",
           definition = function(object){
-            cat("****** Summary of CGHd object ******\n")
-            cat("[CGHd summary] Patients ID \n");
-            cat(names(object@Y),fill=TRUE,"\n")
-            cat("\n")
-            cat("[CGHd summary] number of points\n")
-            print(length(object@Y[[1]]))
-            cat("[CGHd summary] probeID records\n")
-            print(!is.null(object@probeID))            
-             cat("[CGHd summary] genomic position \n")
-            print(!is.null(object@genomic.position))
-            cat("[CGHd summary] GC content records\n")
-            print(!is.null(object@GCcontent))
+            message("****** Summary of CGHd object ******\n")
+            message("[CGHd summary] Patients ID \n");
+            message(names(object@Y),fill=TRUE,"\n")
+            message("\n")
+            message("[CGHd summary] number of points\n")
+            message(length(object@Y[[1]]))
+            message("[CGHd summary] probeID records\n")
+            message(!is.null(object@probeID))
+            message("[CGHd summary] genomic position \n")
+            message(!is.null(object@genomic.position))
+            message("[CGHd summary] GC content records\n")
+            message(!is.null(object@GCcontent))
           }          
           )
 setMethod(
           f = "show",
           signature = "CGHdata",
           definition = function(object){
-            cat("****** CGHdata show ******\n")
-            cat("[CGHd show] Data are in the list format [[patient]]\n")
-            cat("[CGHd show] Data sample: \n")
-            cat("Y[[",names(object@Y)[1],"]]\n",sep="")            
-            print(object@Y[[1]][1:5])
+            message("****** CGHdata show ******\n")
+            message("[CGHd show] Data are in the list format [[patient]]\n")
+            message("[CGHd show] Data sample: \n")
+            message("Y[[",names(object@Y)[1],"]]\n",sep="")
+            message(object@Y[[1]][1:5])
             if (length(names(object@Y))>1){
-              cat("Y[[",names(object@Y)[2],"]] \n",sep="")
-              print(object@Y[[2]][1:5])              
+              message("Y[[",names(object@Y)[2],"]] \n",sep="")
+              message(object@Y[[2]][1:5])
             }
-            cat("[CGHd show] probeID sample: \n")
-            print(object@probeID[1:5])
-            cat("[CGHd show] genomic positions sample: \n")
-            print(object@genomic.position[1:5])
-            cat("[CGHd show] GC content sample: \n")
-            print(object@GCcontent[1:5])
+            message("[CGHd show] probeID sample: \n")
+            message(object@probeID[1:5])
+            message("[CGHd show] genomic positions sample: \n")
+            message(object@genomic.position[1:5])
+            message("[CGHd show] GC content sample: \n")
+            message(object@GCcontent[1:5])
           }          
           )
 
@@ -195,21 +192,21 @@ setMethod(
           f = "print",
           signature = "CGHdata",
           definition = function(x){
-            cat("****** CGHdata print ******\n")
-            cat("[CGHd print] Data are in the list format [[patient]]\n")
-            cat("[CGHd print] Data sample: \n")
-            cat("Y[[",names(x@Y)[1],"]]\n",sep="")            
-            print(x@Y[[1]][1:5])
+            message("****** CGHdata print ******\n")
+            message("[CGHd print] Data are in the list format [[patient]]\n")
+            message("[CGHd print] Data sample: \n")
+            message("Y[[",names(x@Y)[1],"]]\n",sep="")            
+            message(x@Y[[1]][1:5])
             if (length(names(x@Y))>1){
-              cat("Y[[",names(x@Y)[2],"]] \n",sep="")            
-              print(x@Y[[2]][1:5])              
+              message("Y[[",names(x@Y)[2],"]] \n",sep="")            
+              message(x@Y[[2]][1:5])              
             }
-            cat("[CGHd print] probeID sample: \n")
-            print(x@GCcontent[1:5])
-            cat("[CGHd print] genomic positions sample: \n")
-            print(x@genomic.position[1:5])
-            cat("[CGHd print] GC content sample: \n")
-            print(x@GCcontent[1:5])
+            message("[CGHd print] probeID sample: \n")
+            message(x@GCcontent[1:5])
+            message("[CGHd print] genomic positions sample: \n")
+            message(x@genomic.position[1:5])
+            message("[CGHd print] GC content sample: \n")
+            message(x@GCcontent[1:5])
           }          
           )
 

@@ -6,6 +6,7 @@
 \arguments{
   \item{.Object}{an object of the CGHoptions class}
 }
+\value{None}
 \details{ \code{CGHo["GCnorm"]} determines if the bias due to GC content
 should be removed from the data: \code{"linear"} for linear regression
 (degree 2) \code{"none"} for no correction}

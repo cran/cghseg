@@ -25,27 +25,27 @@
   multisample segmentation.
 }
 \examples{
-#set.seed(1)
-#simul = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
-#CGHd  = new("CGHdata",Y=simul$Y)
-#CGHo  = new("CGHoptions")
+set.seed(1)
+simul = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
+CGHd  = new("CGHdata",Y=simul$Y)
+CGHo  = new("CGHoptions")
 
 ## Default initialization
 
-#uniKmax = getuniKmax(CGHd,CGHo)
+uniKmax = getuniKmax(CGHd,CGHo)
 
 ## Modification of all fields:
 ## to tune uniKmax using to 50\% of the length of each profile :
 ## this may provide the same result since a model selection is performed
 ## for tuning.
-#alpha(CGHo) = 0.5
-#uniKmax     = getuniKmax(CGHd,CGHo)
+alpha(CGHo) = 0.5
+uniKmax     = getuniKmax(CGHd,CGHo)
 
 ## Modification of one field for one profile
 ## and check that the value is correct wrt options
 
-#uniKmax[[1]] = 80
-#uniKmax      = getuniKmax(CGHd,CGHo,uniKmax)
+uniKmax[[1]] = 80
+uniKmax      = getuniKmax(CGHd,CGHo,uniKmax)
 }
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}
 \author{F. Picard, E. Lebarbier, M. Hoebeke, G. Rigaill, B. Thiam, S. Robin}

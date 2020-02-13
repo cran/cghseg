@@ -38,7 +38,7 @@ numlib_vector *
 copy_range_numlib_vector(numlib_vector *v, int min, int max)
 {
   if (min>max) {
-    int tmp=min;
+    
     min=max;
     max=min;
   }

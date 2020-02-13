@@ -2,7 +2,7 @@ import(methods,parallel)
 importFrom("stats", "lm", "p.adjust", "pnorm", "rnorm", "rpois",
            "runif", "smooth.spline")
 
-useDynLib(cghseg)
+useDynLib(cghseg, .registration=TRUE)
 exportClasses(CGHdata,CGHoptions,CGHresults)
 exportMethods("initialize")
 exportMethods("[")
@@ -14,4 +14,5 @@ exportMethods("getuniKmax","getmultiKmax")
 exportMethods("getbp","getsegprofiles","getlevels","getbgoutliers")
 exportMethods("multiseg","uniseg")
 export("simulprofiles")
+export(segmeanCO)
 

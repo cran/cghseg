@@ -1,8 +1,8 @@
 #include "ApproxSeg.h"
 
-void ClassiSeg(double *sequence, int *lgSeq, int *nStep, double *res1, int *res2, int *nbClasse, double *moyennes){
+void ClassiSeg_cc(double *sequence, int *lgSeq, int *nStep, double *res1, int *res2, int *nbClasse, double *moyennes){
   /* Compteurs et autres */
-  int i, j, k, l, indice;
+  int i, k, l, indice;
   /* Variable temporaires */
   double * vTmp;
   vTmp = (double *) malloc( *nbClasse * sizeof(double));
@@ -12,7 +12,7 @@ void ClassiSeg(double *sequence, int *lgSeq, int *nStep, double *res1, int *res2
   whichCome = (int *) malloc( *nbClasse * sizeof(int));
   for(i =0; i < *nbClasse; i++) whichCome[i]=-1;
 
-  double min, tMin;
+  double min;
   int whichMin;
 
   for(i = 0; i < *lgSeq; i++)

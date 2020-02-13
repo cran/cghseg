@@ -36,9 +36,7 @@ hybrid(numlib_vector *x, long P, long Kmax, long lmin, long lmax,
   } 
     
 
-  //n     = length(x)
-  long n=x->size;
-
+  
   // param = list()
   long param_size=Kmax;
   param_struct *param=new param_struct[param_size];
@@ -266,7 +264,7 @@ hybrid(numlib_vector *x, long P, long Kmax, long lmin, long lmax,
     //    fprintf(stdout,"tracking local maxima for %d\n",P);
 
 
-    numlib_matrix *L_inc=0;
+    
     numlib_vector *Linc_col=0;
     numlib_vector *Linc_range=0;
 

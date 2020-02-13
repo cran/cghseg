@@ -3,7 +3,7 @@
 
 extern "C" {
 
-  void colibriR_c (double *profil, int *nbi, int *Kmaxi, double *mini, double *maxi, int *origine,
+  void colibriR_cc (double *profil, int *nbi, int *Kmaxi, double *mini, double *maxi, int *origine,
       double *cout_n){
     //char *test="azeaz";
     //cout_n[3]=3.0;
@@ -16,9 +16,9 @@ extern "C" {
     colibri_c (profil, nbi, Kmaxi, mini, maxi, origine, cout_n);
   }
 
-  void meanRuptR_c(double * data, int* position, int*k, double* res){
-    unsigned int j=0;
-    for (unsigned int i=0; i<*k; i++){
+  void meanRuptR_cc(double * data, int* position, int*k, double* res){
+    int j=0;
+    for (int i=0; i<*k; i++){
         double sum = 0.;
         unsigned int count = 0;
         while(j<=(position[i]-1)){ // R to C++ -> -1
@@ -32,9 +32,9 @@ extern "C" {
         res[i] = sum/double(count);
     }
   }
-  void meansqRuptR_c(double * data, int* position, int*k, double* res){
-    unsigned int j=0;
-    for (unsigned int i=0; i<*k; i++){
+  void meansqRuptR_cc(double * data, int* position, int*k, double* res){
+    int j=0;
+    for (int i=0; i<*k; i++){
         double sum = 0.;
         unsigned int count = 0;
         while(j<=(position[i]-1)){ // R to C++ -> -1

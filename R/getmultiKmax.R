@@ -8,19 +8,17 @@ setMethod(f = "getmultiKmax",signature = "CGHdata",
             
             if (is.null(multiKmax)){
               if (CGHo["select"] == "none"){
-                cat("[check getmultiKmax] if no selection is performed while multiKmax is not specified \n")
-                cat("[check getmultiKmax] multiKmax is initialized by default\n")
-                cat("**********************************************************\n")
+                message("[check getmultiKmax] if no selection is performed while multiKmax is not specified \n")
+                message("[check getmultiKmax] multiKmax is initialized by default\n")
+                message("**********************************************************\n")
               }
               multiKmax    = floor(sum(unlist(uniKmax))) * CGHo["beta"]
             } else {
               if (multiKmax < M){
-                cat("[getmultiKmax]  multiKmax should be greater that the number of patients (",M,") \n")
-                stop()
+                stop("[getmultiKmax]  multiKmax should be greater that the number of patients (",M,") \n")
               } else {
                 if (multiKmax > sum(unlist(uniKmax))){
-                  cat("[getmultiKmax] multiKmax should be lower that the sum of the number allowed segments in every profile (",sum(unlist(uniKmax)),") \n")
-                  stop()
+                stop("[getmultiKmax] multiKmax should be lower that the sum of the number allowed segments in every profile (",sum(unlist(uniKmax)),") \n")
                 }
               }
             }

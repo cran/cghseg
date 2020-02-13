@@ -6,17 +6,17 @@
 \arguments{
   \item{.Object}{an object of the CGHoptions class}
 }
+\value{None}
 \details{
   \code{CGHo["calling"]} determines if calling should be done during
   segmentation (logical). The number of levels is fixed and set in \code{CGHo["nblevels"]} 
 }
 \examples{
-#set.seed(1)
-#simul         = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
-#CGHd          = new("CGHdata",Y=simul$Y)
-#CGHo          = new("CGHoptions")
-#calling(CGHo) = TRUE
-#CGHr          = multiseg(CGHd,CGHo)
+set.seed(1)
+simul         = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
+CGHd          = new("CGHdata",Y=simul$Y)
+CGHo          = new("CGHoptions")
+calling(CGHo) = TRUE
 }
 \seealso{nblevels}
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}

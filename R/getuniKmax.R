@@ -3,9 +3,9 @@ setMethod(f = "getuniKmax",signature = "CGHdata",
             
             if (is.null(uniKmax)){              
               if (CGHo["select"] == "none"){
-                cat("[getuniKmax] if no selection is performed while uniKmax is not specified \n")                
+                message("[getuniKmax] if no selection is performed while uniKmax is not specified \n")                
               }
-              cat("[getuniKmax] uniKmax initialized by pre-screening\n")
+              message("[getuniKmax] uniKmax initialized by pre-screening\n")
               ## uniKmax = lapply(names(.Object@Y),FUN = function(ell){floor(sum(!is.na(.Object@Y[[ell]]))*CGHo["alpha"])})
               select.tmp    = CGHo["select"]
               calling.tmp   = CGHo["calling"]
@@ -32,17 +32,17 @@ setMethod(f = "getuniKmax",signature = "CGHdata",
               select(CGHo)   = select.tmp
             } else {              
               if ( sum(names(.Object@Y) != names(uniKmax))>0){                
-                cat("[getuniKmax] uniKmax should be a list with the same names as CGHd \n")
-                cat("[getuniKmax] the names of uniKmax should be patients names \n")      
+                message("[getuniKmax] uniKmax should be a list with the same names as CGHd \n")
+                message("[getuniKmax] the names of uniKmax should be patients names \n")      
                 stop()
               }              
               lapply(names(.Object@Y), FUN = function(m){
                 if (CGHo["calling"]){
                   if ((CGHo["nblevels"]>uniKmax[[m]]) ){
-                    cat("[getuniKmax] Error in uniKmax \n")
-                    cat("[getuniKmax] Error for profile: ", m, "\n")
-                    cat("[getuniKmax] The number of clusters must be lower than the number of segments in this profile","\n")
-                    cat("[getuniKmax] Check CGHo[\"nblevels\"] and Kmax for this profile","\n")
+                    message("[getuniKmax] Error in uniKmax \n")
+                    message("[getuniKmax] Error for profile: ", m, "\n")
+                    message("[getuniKmax] The number of clusters must be lower than the number of segments in this profile","\n")
+                    message("[getuniKmax] Check CGHo[\"nblevels\"] and Kmax for this profile","\n")
                     stop()
                   }
                 }

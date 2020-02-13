@@ -40,7 +40,7 @@ setMethod(
           f = "print",
           signature = "CGHoptions",
           definition = function(x){
-            cat("****** CGHoption print ******\n")
+            message("****** CGHoption print ******\n")
             A = data.frame(options = rep(NA,9), value = rep(NA,9),row.names=NULL)
             A[1,1]  = "select"
             A[1,2]  = x@select
@@ -68,7 +68,7 @@ setMethod(
           f = "show",
           signature = "CGHoptions",
           definition = function(object){
-            cat("****** CGHoption show ******\n")
+            message("****** CGHoption show ******\n")
             A = data.frame(options = rep(NA,9), value = rep(NA,9))
             A[1,1]  = "select"
             A[1,2]  = object@select
@@ -183,16 +183,16 @@ setMethod(
           definition = function(.Object){
             if        (.Object@calling==TRUE & (.Object@wavenorm!="none" | .Object@GCnorm!="none") ){
               instr = parse(text = "Res = ILSclust(.Object,CGHo,uniKmax,multiKmax)")
-              cat("[multiseg] ILSclust running \n")
+              message("[multiseg] ILSclust running \n")
             } else if (.Object@calling==TRUE & .Object@wavenorm=="none" & .Object@GCnorm=="none" ){
               instr = parse(text = "Res = multisegclust(.Object,CGHo,uniKmax,multiKmax)")
-              cat("[multiseg] multisegclust running \n")    
+              message("[multiseg] multisegclust running \n")    
             } else if (.Object@calling==FALSE & .Object@wavenorm=="none" & .Object@GCnorm=="none"){
               instr = parse(text = "Res = multisegmean(.Object,CGHo,uniKmax,multiKmax)")
-              cat("[multiseg] multisegmean running \n")
+              message("[multiseg] multisegmean running \n")
             } else if (.Object@calling==FALSE & (.Object@wavenorm!="none" | .Object@GCnorm!="none") ){
               instr = parse(text = "Res = ILS(.Object,CGHo,uniKmax,multiKmax)")
-              cat("[multiseg] ILS running \n")
+              message("[multiseg] ILS running \n")
             }
             return(instr)
           }          

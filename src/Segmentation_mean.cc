@@ -95,7 +95,7 @@ ostream & operator << (ostream &s, const Segmentation_mean &Seg_mean)
       int pos_min  = k;
       int       a  = k*_lmin;
       int       b  = min(k*_lmax+1,i-_lmin+2);
-      int       h2 = 0;
+      
       double   min = numeric_limits<double>::max();
 
       for (int h = a; h < b; h++){

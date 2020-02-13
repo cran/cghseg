@@ -56,11 +56,11 @@ void colibri_Analysis (double *profil, int *nbi, int *Kmaxi, double *mini, doubl
 	//writeFileI(fileOutInt, origine, nb, 0);
 	
 	/* Next */
-	Polynome2 * p1;
+	
 	Liste * l1;  
-	Polynome2 * pTest;
+	
 	int turn=1;
-	char c = 13;
+	
 	//Polynome2 **stock= (Polynome2**)malloc(nb *sizeof(Polynome2*));//A
 	Polynome2 **stock= new Polynome2* [nb];
 	i=0;

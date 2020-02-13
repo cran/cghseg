@@ -15,11 +15,11 @@
   \item{CGHr}{object of class CGHresult}
 }
 \examples{
-#set.seed(1)
-#simul = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
-#CGHd  = new("CGHdata",Y=simul$Y)
-#CGHo  = new("CGHoptions")
-#CGHr  = uniseg(CGHd,CGHo)
+set.seed(1)
+simul = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
+CGHd  = new("CGHdata",Y=simul$Y)
+CGHo  = new("CGHoptions")
+CGHr  = uniseg(CGHd,CGHo)
 }
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Picard et al. Biostatistics (2011), Pruned dynamic programming for optimal multiple change-point detection, G. Rigaill, arXiv preprint arXiv:1004.0887 (2010)}
 \author{F. Picard, E. Lebarbier, M. Hoebeke, G. Rigaill, B. Thiam, S. Robin}

@@ -3,7 +3,7 @@
 void ClassiSegProba(double *sequence, int *lgSeq, int *nStep, double *res1, int *res2, int *nbClasse, 
 			   double *moyennes, double *logP, double *variance_){
   /* Compteurs et autres */
-  int i, j, k, l, indice;
+  int i, k, l, indice;
 	double variance = variance_[0];
   /* Variable temporaires */
   double * vTmp;
@@ -14,7 +14,7 @@ void ClassiSegProba(double *sequence, int *lgSeq, int *nStep, double *res1, int 
   whichCome = (int *) malloc( *nbClasse * sizeof(int));
   for(i =0; i < *nbClasse; i++) whichCome[i]=-1;
 
-  double min, tMin;
+  double min;
   int whichMin;
 
   for(i = 0; i < *lgSeq; i++)

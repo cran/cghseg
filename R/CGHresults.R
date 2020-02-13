@@ -115,14 +115,14 @@ setMethod(
           f = "summary",
           signature = "CGHresults",
           definition = function(object){
-            cat("****** Summary of CGHr object ******\n")
-            cat("\n")
-            cat("[CGHr summary] Patients IDs\n");
-            cat(names(object@mu),fill=TRUE,"\n")
-            Ktot = sum(unlist(lapply(object@mu,FUN = function(x){dim(x)[1]})))
-            cat("[CGHr summary] Total Number of segments: ",Ktot,"\n")
-            cat("[CGHr summary] Individual Number of segments:\n")
-            print(sapply(object@mu,FUN = function(x){dim(x)[1]}))
+            # cat("****** Summary of CGHr object ******\n")
+            # cat("\n")
+            # cat("[CGHr summary] Patients IDs\n");
+            # cat(names(object@mu),fill=TRUE,"\n")
+            # Ktot = sum(unlist(lapply(object@mu,FUN = function(x){dim(x)[1]})))
+            # cat("[CGHr summary] Total Number of segments: ",Ktot,"\n")
+            # cat("[CGHr summary] Individual Number of segments:\n")
+            # print(sapply(object@mu,FUN = function(x){dim(x)[1]}))
             
           }          
           )
@@ -139,7 +139,7 @@ setMethod(f = "getbp",signature = "CGHresults",
             }
             
             bp = lapply(names(.Object@mu),FUN = function(ell){
-              cat(ell,"\n")
+              message(ell,"\n")
               bpi = tabulate(.Object@mu[[ell]]$end)
               if (!is.null(.Object@probeID)){
                 out = data.frame(probeID = .Object@probeID,position = x,bp=bpi)
@@ -184,8 +184,8 @@ setMethod(f = "getlevels",signature = "CGHresults",
           definition = function(.Object){
             
             if (.Object@from == "uniseg"){
-              cat("[warnings] calling has been performed with uniseg \n")
-              cat("[warnings] calling IDs do not correspond and have a meaning for each profile only (not globally)\n",fill=TRUE)
+              warning("[warnings] calling has been performed with uniseg \n")
+              warning("[warnings] calling IDs do not correspond and have a meaning for each profile only (not globally)\n",fill=TRUE)
             } else {
               
               if (.Object@options@calling){                
@@ -215,7 +215,7 @@ setMethod(f = "getlevels",signature = "CGHresults",
                 }
                 return(Z)
               } else {
-                cat("[output warning] getlevels only works when CGHo[\"calling\"]==TRUE \n")
+                warning("[output warning] getlevels only works when CGHo[\"calling\"]==TRUE \n")
               }              
             }              
           })
@@ -227,7 +227,7 @@ setMethod(f = "getbgoutliers",signature = "CGHresults",
           definition = function(.Object,CGHr.smooth,fdr){
 
             if ( (.Object@options@wavenorm!="position") | (CGHr.smooth@options@wavenorm =="position")){
-              cat("[warning] the entry must be CGHr.position,CGHr.spline \n")
+              warning("[warning] the entry must be CGHr.position,CGHr.spline \n")
               stop()
             } else {
               n       = length(.Object@theta$waveffect)

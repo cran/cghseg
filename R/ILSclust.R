@@ -40,8 +40,7 @@ setMethod(f = "ILSclust",signature = "CGHdata",
 	      mu.tmp              = mu.test              
             }		
             if (out.EM$empty!=0){
-              cat("[ILSclust ERROR]: convergence to a solution with empty levels.","\n");
-              stop("[ILSclust ERROR]: try a lower nblevels(CGHo)","\n");
+             stop("[ILSclust ERROR]: convergence to a solution with empty levels.","\n", "try a lower nblevels(CGHo)","\n");
             }            
             out.DP2EM    = DP2EM(.Object,mu,theta=Reduce("+",B))
             loglik       = quicklvinc(out.DP2EM$xk,out.DP2EM$x2k,out.EM$phi,out.DP2EM$nk,P,vh=TRUE)$lvinc

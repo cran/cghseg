@@ -29,8 +29,7 @@ setMethod(f = "multisegclust",signature = "CGHdata",
             } # end while
 			
             if (out.EM$empty!=0){
-              cat("[multisegclust ERROR]: convergence to a solution with empty levels.","\n");
-              stop("[multisegclust ERROR]: try a lower nblevels(CGHo)","\n");
+              stop("[multisegclust ERROR]:convergence to a solution with empty levels.","\n","try a lower nblevels(CGHo)","\n");
             }
 ######   output   #####################################################################
             out.DP2EM    = DP2EM(.Object,mu)

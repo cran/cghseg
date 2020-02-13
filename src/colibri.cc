@@ -39,7 +39,7 @@ double *cout_n)
     int i2 = 0;
 	double somme = 0;
 	int turn = 1;
-	char c = 13;
+	
 
     /* Initialisation Cout en 1 segment */
     while(i < nb)
@@ -54,9 +54,9 @@ double *cout_n)
 
 
     /* Initialisation Polynome Cost */
-	Polynome2 * p1;
+	
 	Liste * l1;  
-	Polynome2 * pTest;
+	
 
 	Polynome2 **stock= new Polynome2* [nb]; 
 

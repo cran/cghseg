@@ -6,6 +6,7 @@
 \arguments{
   \item{.Object}{an object of the CGHoptions class}
 }
+\value{None}
 \details{ \code{CGHo["nblevels"]} determines the total number of levels
   when calling is performed.}
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}

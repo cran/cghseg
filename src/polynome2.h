@@ -25,7 +25,7 @@
 
 class Polynome2 {
  private:
-     double a2, a1, a0;
+     double a0, a1, a2;
      /* racine du polynome - A*/
      double rac1, rac2;
      /* status of the polynome 0 = roots not computed, 1 = computed*/

@@ -1,19 +1,16 @@
 Package: cghseg
 Type: Package
 Title: Segmentation Methods for Array CGH Analysis
-Version: 1.0.2-1
+Version: 1.0.5
 Depends: methods, parallel
-Date: 2012-12-06
+Date: 2020-02-06
 Author: Franck Picard, Mark Hoebeke, Emilie Lebarbier, Vincent Miele,
         Guillem Rigaill, Stephane Robin
-Maintainer: ORPHANED
-Description: cghseg is an R package dedicated to the analysis of CGH
-        profiles using segmentation models.
+Maintainer: Samuel Blanck <samuel.blanck@univ-lille.fr>
+Description: Dedicated to the analysis of CGH (Comparative Genomic Hybridization) array profiles using segmentation models. 'cghseg' package is intended to detect breakpoints from CGH profiles. It can handle both single and multiple profiles analysis, to perform segmentation, normalization and calling. Methods for joint segmentation are described in : Picard and al. (2011), <doi:10.1093/biostatistics/kxq076>.
 License: GPL (>= 2)
-Packaged: 2016-01-03 09:38:12 UTC; ripley
 NeedsCompilation: yes
-X-CRAN-Original-Maintainer: Franck Picard <franck.picard@univ-lyon1.fr>
-X-CRAN-Comment: Orphaned on 2013-11-12 as the maintainer repeatedly
-        failed to respond to requests for valid portable C++ code.
+RoxygenNote: 6.0.1
+Packaged: 2020-02-13 08:52:07 UTC; sblanck
 Repository: CRAN
-Date/Publication: 2016-01-03 10:39:51
+Date/Publication: 2020-02-13 17:00:05 UTC

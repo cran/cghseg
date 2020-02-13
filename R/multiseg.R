@@ -8,14 +8,12 @@ setMethod(f = "multiseg",signature = "CGHdata",
             Res        = list()
             
             if ((CGHo["GCnorm"]=="linear") & (is.null(.Object@GCcontent))){
-              cat("[check multiseg] GCnorm can not be performed \n")
-              cat("[check multiseg] check that GCcontent is a record in the data\n")
-              stop()
+              stop("[check multiseg] GCnorm can not be performed \n","[check multiseg] check that GCcontent is a record in the data\n")
             }
             
             if (CGHo["select"] != "none"){
               if ( (CGHo["calling"]==FALSE) & (CGHo["wavenorm"]=="none")  & (CGHo@GCnorm=="none")){
-                cat("[multiseg] multisegmean running \n")
+                message("[multiseg] multisegmean running \n")
                 Res = multisegmean(.Object,CGHo,uniKmax,multiKmax)
               } else {
                 Kh        = golden.search(.Object,CGHo,uniKmax,multiKmax)
@@ -26,7 +24,7 @@ setMethod(f = "multiseg",signature = "CGHdata",
               eval(fun2run(CGHo))
             }
             
-            cat("\n")
+            message("\n")
             
             if ( (CGHo["wavenorm"]!="none") | (CGHo["GCnorm"]!="none")  ){
               theta(CGHr) =  Res$theta

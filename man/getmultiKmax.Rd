@@ -23,32 +23,32 @@
   segments (unknown).
 }
 \examples{
-#set.seed(1)
-#simul   = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
-#CGHd    = new("CGHdata",Y=simul$Y)
-#CGHo    = new("CGHoptions")
+set.seed(1)
+simul   = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)
+CGHd    = new("CGHdata",Y=simul$Y)
+CGHo    = new("CGHoptions")
 
 ## Default initialization
 
-#multiKmax = getmultiKmax(CGHd,CGHo)
+multiKmax = getmultiKmax(CGHd,CGHo)
 
 ## Modification of all fields:
 ## to set multiKmax to 50\% of the sum of Kmax of each profile:
 
-#beta(CGHo) = 0.5
-#multiKmax = getmultiKmax(CGHd,CGHo)
+beta(CGHo) = 0.5
+multiKmax = getmultiKmax(CGHd,CGHo)
 
 ## Modification of uniKmax
 
-#uniKmax      = getuniKmax(CGHd,CGHo)
-#uniKmax[[1]] = 80
-#multiKmax    = getmultiKmax(CGHd,CGHo,uniKmax)
+uniKmax      = getuniKmax(CGHd,CGHo)
+uniKmax[[1]] = 80
+multiKmax    = getmultiKmax(CGHd,CGHo,uniKmax)
 
 ## Modification of uniKmax and multiKmax
 ## and check that the value is correct wrt options
 
-#uniKmax[[1]] = 80
-#multiKmax    = getmultiKmax(CGHd,CGHo,uniKmax,multiKmax = 10)
+uniKmax[[1]] = 80
+multiKmax    = getmultiKmax(CGHd,CGHo,uniKmax,multiKmax = 10)
 }
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}
 \author{F. Picard, E. Lebarbier, M. Hoebeke, G. Rigaill, B. Thiam, S. Robin}

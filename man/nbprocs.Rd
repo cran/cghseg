@@ -6,12 +6,13 @@
 \arguments{
   \item{.Object}{an object of the CGHoptions class}
 }
+\value{None}
 \details{
   \code{CGHo["nbprocs"]} sets the number of computer processes to use for parallel computations. 
 }
 \examples{
-#CGHo         = new("CGHoptions")
-#nbprocs(CGHo) = 2 # if 2 processes are available
+CGHo         = new("CGHoptions")
+nbprocs(CGHo) = 2 # if 2 processes are available
 }
 \references{Joint segmentation, calling and normalization of multiple CGH profiles, Biostatistics (2011)}
 \author{F. Picard, E. Lebarbier, M. Hoebeke, G. Rigaill, B. Thiam, S. Robin}

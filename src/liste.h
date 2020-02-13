@@ -25,8 +25,9 @@
 class Liste {
 private:
   double max, min;
-  Polynome2 *poly;
   Liste *next;
+  Polynome2 *poly;
+  
 public:
   /* constructors and destructors */
   Liste()

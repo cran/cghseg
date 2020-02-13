@@ -6,6 +6,7 @@
 \arguments{
   \item{.Object}{an object of the CGHoptions class}
 }
+\value{None}
 \examples{
 set.seed(1)
 simul       = simulprofiles(M=5,n=100,k.mean=2,SNR=5,lambda=1)

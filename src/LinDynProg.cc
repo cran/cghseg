@@ -20,10 +20,10 @@ void LinProgDyn(double *sequence, int *lgSeq, int *nStep, double *res1, int *res
 	/* Lecture des données */
 	/* On stocke les données comme un liste de vecteurs */
 	//printf("ligne 11\n");
-	char c = 13;
+	
 	numlib_matrix_view matResult1 = numlib_matrix_view_array(res1, *nStep, *lgSeq);
 	numlib_matrix_set_all(&matResult1.matrix, NUMLIB_POSINF);
-	int i, j, k, l;
+	int i, j, k;
 	
 	/* on calcule le carré de chaque point */
 	double *normSeq = (double*) malloc(* lgSeq * sizeof(double));
